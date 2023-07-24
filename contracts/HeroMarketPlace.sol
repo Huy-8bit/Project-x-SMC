@@ -3,19 +3,23 @@
 pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
-import "./NFT.sol";
+import "./HeroNFT.sol";
 import "./HeroToken.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "./NFT_marketPlace.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./HeroItem.sol";
+import "./HeroMarketPlace.sol";
 
-contract NFT_marketPlace {
+contract HeroMarketPlace {
     address public owner;
     uint256 public totalNFTs;
+    uint256 public totalItems;
     HeroNFT public heroNFT;
     HeroToken public heroToken;
+    HeroItem public heroItem;
 
-    struct ListedToken {
+    // NFT ERC721
+    struct ListedNFTToken {
         uint256 tokenId;
         address payable owner;
         address payable seller;
@@ -29,12 +33,34 @@ contract NFT_marketPlace {
         uint256 price,
         bool currentlyListed
     );
-    mapping(uint256 => ListedToken) public idToListedToken;
+    mapping(uint256 => ListedNFTToken) public idToListedToken;
 
-    constructor(address _heroNFTAddress, address _heroTokenAddress) {
+    // item ERC1155
+    struct ListedItemToken {
+        uint256 tokenId;
+        address payable owner;
+        address payable seller;
+        uint256 price;
+        bool currentlyListed;
+    }
+    event ItemListedSuccess(
+        uint256 indexed tokenId,
+        address owner,
+        address seller,
+        uint256 price,
+        bool currentlyListed
+    );
+    mapping(uint256 => ListedItemToken) public idToListedItem;
+
+    constructor(
+        address _heroTokenAddress,
+        address _heroNFTAddress,
+        address _heroItemAddress
+    ) {
         owner = msg.sender;
         heroNFT = HeroNFT(_heroNFTAddress);
         heroToken = HeroToken(_heroTokenAddress);
+        heroItem = HeroItem(_heroItemAddress);
     }
 
     function get_owner() public view returns (address) {
@@ -49,10 +75,20 @@ contract NFT_marketPlace {
         return address(heroToken);
     }
 
+    function get_heroItem() public view returns (address) {
+        return address(heroItem);
+    }
+
     function getListedTokenForId(
         uint256 _tokenId
-    ) public view returns (ListedToken memory) {
+    ) public view returns (ListedNFTToken memory) {
         return idToListedToken[_tokenId];
+    }
+
+    function getListedItemForId(
+        uint256 _tokenId
+    ) public view returns (ListedItemToken memory) {
+        return idToListedItem[_tokenId];
     }
 
     function approveNft(uint256 _tokenId) public {
@@ -62,12 +98,12 @@ contract NFT_marketPlace {
     function ListedNFT(
         uint256 _tokenId,
         uint256 _price
-    ) public returns (ListedToken memory) {
+    ) public returns (ListedNFTToken memory) {
         // require(msg.sender == owner, "You are not the owner of this contract");
         // uint256 tokenId = heroNFT.createNFT(_NFT_url);
         totalNFTs++;
         // heroNFT.approveNFT(_tokenId);
-        idToListedToken[_tokenId] = ListedToken(
+        idToListedToken[_tokenId] = ListedNFTToken(
             _tokenId,
             payable(msg.sender),
             payable(msg.sender),
@@ -75,24 +111,29 @@ contract NFT_marketPlace {
             true
         );
         emit TokenListedSuccess(_tokenId, msg.sender, msg.sender, _price, true);
-
         return idToListedToken[_tokenId];
     }
 
-    function getAllListedTokens() public view returns (ListedToken[] memory) {
-        ListedToken[] memory listedTokens = new ListedToken[](totalNFTs);
+    function getAllListedTokens()
+        public
+        view
+        returns (ListedNFTToken[] memory)
+    {
+        ListedNFTToken[] memory listedNFTTokens = new ListedNFTToken[](
+            totalNFTs
+        );
         uint256 counter = 0;
         for (uint256 i = 1; i <= totalNFTs; i++) {
             if (idToListedToken[i].currentlyListed) {
-                listedTokens[counter] = idToListedToken[i];
+                listedNFTTokens[counter] = idToListedToken[i];
                 counter++;
             }
         }
-        return listedTokens;
+        return listedNFTTokens;
     }
 
     function buyNft(uint256 _tokenId) public payable {
-        ListedToken memory listedToken = idToListedToken[_tokenId];
+        ListedNFTToken memory listedToken = idToListedToken[_tokenId];
         address seller = listedToken.seller;
         uint256 price = listedToken.price;
         require(
@@ -107,7 +148,7 @@ contract NFT_marketPlace {
     }
 
     function removeFromMarket(uint256 _tokenId) public {
-        ListedToken storage listedToken = idToListedToken[_tokenId];
+        ListedNFTToken storage listedToken = idToListedToken[_tokenId];
 
         require(
             listedToken.seller == msg.sender,
@@ -120,8 +161,8 @@ contract NFT_marketPlace {
     }
 
     // check all my NFTs
-    function getMyNFTs() public view returns (ListedToken[] memory) {
-        ListedToken[] memory listedTokens = new ListedToken[](totalNFTs);
+    function getMyNFTs() public view returns (ListedNFTToken[] memory) {
+        ListedNFTToken[] memory listedTokens = new ListedNFTToken[](totalNFTs);
         uint256 counter = 0;
         for (uint256 i = 1; i <= totalNFTs; i++) {
             if (idToListedToken[i].owner == msg.sender) {
@@ -132,8 +173,8 @@ contract NFT_marketPlace {
         return listedTokens;
     }
 
-    function getAllNFTs() public view returns (ListedToken[] memory) {
-        ListedToken[] memory listedTokens = new ListedToken[](totalNFTs);
+    function getAllNFTs() public view returns (ListedNFTToken[] memory) {
+        ListedNFTToken[] memory listedTokens = new ListedNFTToken[](totalNFTs);
         uint256 counter = 0;
         for (uint256 i = 1; i <= totalNFTs; i++) {
             listedTokens[counter] = idToListedToken[i];
@@ -143,7 +184,7 @@ contract NFT_marketPlace {
     }
 
     function transctionNft(address _to, uint256 _tokenId) public {
-        ListedToken memory listedToken = idToListedToken[_tokenId];
+        ListedNFTToken memory listedToken = idToListedToken[_tokenId];
         require(
             listedToken.owner == msg.sender,
             "You are not the owner of this NFT"
@@ -155,7 +196,7 @@ contract NFT_marketPlace {
     }
 
     function editPriceNft(uint256 _tokenId, uint256 _price) public {
-        ListedToken memory listedToken = idToListedToken[_tokenId];
+        ListedNFTToken memory listedToken = idToListedToken[_tokenId];
         require(
             listedToken.owner == msg.sender,
             "You are not the owner of this NFT"

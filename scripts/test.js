@@ -5,6 +5,8 @@ const { ethers } = require("hardhat");
 const fs = require("fs");
 const { id } = require("ethers/lib/utils");
 const utils = ethers.utils;
+require("dotenv").config();
+// const { WETH } = require("@uniswap/v2-periphery");
 // comandline: npx hardhat test scripts/test.js --network sepolia
 
 const nftFilePath = "./deployment/HeroNFT.json";
@@ -51,17 +53,21 @@ describe("NFTMarketplace", function () {
     heroItem = await HeroItem.attach(HeroItemAddress);
     HeroMarketPlace = await ethers.getContractFactory("HeroMarketPlace");
     heroMarketPlace = await HeroMarketPlace.attach(HeroMarketPlaceAddress);
+    WETH = await ethers.getContractFactory("ERC20");
+    wethToken = await WETH.attach(process.env.WETH);
+
     [owner] = await ethers.getSigners();
   });
 
   describe("NFT", function () {
-    // it("should return address", async function () {
-    //   console.log("owner: ", owner.address);
-    //   console.log("NFTAddress: ", NFTAddress);
-    //   console.log("tokenAddress: ", tokenAddress);
-    //   console.log("heroItem: ", HeroItemAddress);
-    //   console.log("HeroMarketPlaceAddress: ", HeroMarketPlaceAddress);
-    // });
+    it("should return address", async function () {
+      console.log("owner: ", owner.address);
+      console.log("NFTAddress: ", NFTAddress);
+      console.log("tokenAddress: ", tokenAddress);
+      console.log("heroItem: ", HeroItemAddress);
+      console.log("HeroMarketPlaceAddress: ", HeroMarketPlaceAddress);
+      console.log("WETH: ", wethToken.address);
+    });
     // it("Should transfer heroToken", async function () {
     //   const amount = utils.parseEther("15000000000");
     //   const result = await heroToken.transfer(
@@ -98,13 +104,28 @@ describe("NFTMarketplace", function () {
     //   );
     //   console.log("result: ", result);
     // });
-    // it("crete NFT", async function () {
-    //   const tokenId = 7;
-    //   const tokenURI =
-    //     "https://ipfs.io/ipfs/QmdqjbEdpXpbxP5Bs4KkqYs44eDwufWLW4NfqPt2tZZeEA?filename=photo1.json";
-    //   const result = await heroNFT.mintNFTWithId(tokenId, tokenURI, 3);
+
+    // it("Should return balance of owner", async function () {
+    //   const balance = await heroNFT.checkBalance();
+    //   console.log("balance: ", balance.toString());
+    // });
+
+    // it("Should approve weth", async function () {
+    //   const amount = await heroNFT.getPrice(0);
+    //   console.log("amount: ", amount);
+    //   const result = await wethToken.approve(heroNFT.address, amount);
     //   console.log("result: ", result);
     // });
+    it("Should crete NFT", async function () {
+      const value = await heroNFT.checkValue();
+      console.log("value: ", value);
+      const tokenId = 7777;
+      const tokenURI =
+        "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json";
+      const result = await heroNFT.mintNFTWithId(tokenId, tokenURI, 0);
+      console.log("result: ", result);
+    });
+
     // it("Should listed NFT on marketplace", async function () {
     //   const tokenId = 7;
     //   const result = await heroMarketPlace.ListedNFT(

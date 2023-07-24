@@ -1,7 +1,7 @@
 {
-    "name": "Naruto",
+    "name": "HERO NFT",
     "description": "This is an awesome NFT created for demonstration purposes.",
-    "image": "ipfs.io/ipfs/QmV53cfDMoQrv4JHnEtmsrJbvcY179Dh5mmb6GyaGUqWzC?filename=output2.webp",
+    "image": "https://ipfs.io/ipfs/QmRpWeKmi5qcLuSy2ai7K95Eg6uDkEyvLoReMKzeHRKuLm?filename=output.webp",
     "attributes": [{
             "trait_type": "Color",
             "value": "Red"

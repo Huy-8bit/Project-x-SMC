@@ -10,6 +10,7 @@ const nftFilePath = "./deployment/HeroNFT.json";
 const TokenFilePath = "./deployment/HeroToken.json";
 const HeroMarketPlaceFilePath = "./deployment/HeroMarketPlace.json";
 const HeroItemFilePath = "./deployment/HeroItem.json";
+require("dotenv").config();
 
 async function main() {
   const [deployer] = await ethers.getSigners();
@@ -28,6 +29,8 @@ async function main() {
   };
   const TokenJsonData = JSON.stringify(TokenData, null, 2);
   fs.writeFileSync(TokenFilePath, TokenJsonData);
+  //   console.log("Waiting for 15 seconds for the transaction to be confirmed...");
+  //   await new Promise((resolve) => setTimeout(resolve, 15000));
 
   // deploy NFT
   const NFT = await ethers.getContractFactory("HeroNFT");
@@ -39,7 +42,8 @@ async function main() {
   };
   const nftJsonData = JSON.stringify(nftData, null, 2);
   fs.writeFileSync(nftFilePath, nftJsonData);
-
+  //   console.log("Waiting for 15 seconds for the transaction to be confirmed...");
+  //   await new Promise((resolve) => setTimeout(resolve, 15000));
   // deploy MyERC1155Token
   const HeroItem = await ethers.getContractFactory("HeroItem");
   const heroItem = await HeroItem.deploy(
@@ -52,7 +56,8 @@ async function main() {
   };
   const HeroItemDataJsonData = JSON.stringify(HeroItemAddressData, null, 2);
   fs.writeFileSync(HeroItemFilePath, HeroItemDataJsonData);
-
+  //   console.log("Waiting for 15 seconds for the transaction to be confirmed...");
+  //   await new Promise((resolve) => setTimeout(resolve, 15000));
   // deploy NFTMarketplace
 
   const Wibu_NFTMarketplace = await ethers.getContractFactory(
@@ -73,6 +78,8 @@ async function main() {
   };
   const HeroMarketPlaceJsonData = JSON.stringify(HeroMarketPlaceData, null, 2);
   fs.writeFileSync(HeroMarketPlaceFilePath, HeroMarketPlaceJsonData);
+  //   console.log("Waiting for 15 seconds for the transaction to be confirmed...");
+  //   await new Promise((resolve) => setTimeout(resolve, 15000));
 
   console.log("Deployment completed. Data saved to respective JSON files.");
 }

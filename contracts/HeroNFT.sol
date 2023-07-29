@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./HeroMarketPlace.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract HeroNFT is ERC721URIStorage {
     using Counters for Counters.Counter;
@@ -17,7 +16,7 @@ contract HeroNFT is ERC721URIStorage {
     address public owner;
     string public NFT_url;
     // price for each rank
-    uint256[4] public price = [0.1 ether, 0.2 ether, 0.3 ether, 0.4 ether];
+    uint256[4] public price = [0.1 ether, 0.5 ether, 1 ether, 2 ether];
     enum Rank {
         Common,
         Rare,
@@ -37,6 +36,12 @@ contract HeroNFT is ERC721URIStorage {
         owner = msg.sender;
     }
 
+    function withdraw() public payable {
+        require(msg.sender == owner, "Only owner can withdraw");
+        uint256 balance = address(this).balance;
+        payable(msg.sender).transfer(balance);
+    }
+
     function mintNFTWithId(
         uint256 _tokenId,
         string memory _NFT_url,
@@ -54,16 +59,8 @@ contract HeroNFT is ERC721URIStorage {
                 _rank == Rank.Legendary,
             "Invalid rank"
         );
-        require(
-            address(msg.sender).balance >= 0.5 ether,
-            "Insufficient payment"
-        ); // Require at least 0.5 ETH to mint
-        require(
-            // transfer 0.5 ETH to owner
-            payable(owner).send(0.5 ether),
-            "Transfer failed"
-        );
-
+        uint256 mintingPrice = getPrice(uint256(_rank));
+        require(msg.value >= mintingPrice, "Insufficient ether sent");
         _tokenIds.increment();
 
         _mint(msg.sender, _tokenId);
@@ -72,8 +69,55 @@ contract HeroNFT is ERC721URIStorage {
         NFTs[_tokenId] = NFT(_tokenId, _NFT_url, _rank);
     }
 
-    function checkValue() public view returns (uint256) {
-        return address(this).balance;
+    function mintRandomNFT(string memory _NFT_url) public payable {
+        require(
+            balanceOf(msg.sender) < 2 || msg.sender == owner,
+            "You can only own 2 NFTs at most"
+        );
+
+        // Generate a random number between 0 and 99 (inclusive)
+        uint256 randomNumber = uint256(
+            keccak256(
+                abi.encodePacked(block.timestamp, block.difficulty, msg.sender)
+            )
+        ) % 100;
+
+        // Define the ranges for each rarity
+        uint256 commonThreshold = 50; // 0 - 49 (50%)
+        uint256 rareThreshold = commonThreshold + 30; // 50 - 79 (30%)
+        uint256 epicThreshold = rareThreshold + 15; // 80 - 94 (15%)
+        uint256 legendaryThreshold = epicThreshold + 5; // 95 - 99 (5%)
+
+        Rank randomRank;
+
+        // Determine the rarity based on the random number generated
+        if (randomNumber < commonThreshold) {
+            randomRank = Rank.Common;
+        } else if (randomNumber < rareThreshold) {
+            randomRank = Rank.Rare;
+        } else if (randomNumber < epicThreshold) {
+            randomRank = Rank.Epic;
+        } else {
+            randomRank = Rank.Legendary;
+        }
+
+        // Get the minting price for the chosen rarity
+        uint256 mintingPrice = getPrice(uint256(randomRank));
+        require(msg.value >= mintingPrice, "Insufficient ether sent");
+
+        // Increment the tokenIds counter
+        _tokenIds.increment();
+
+        // Mint the NFT with the generated token ID and given URL
+        _mint(msg.sender, _tokenIds.current());
+        _setTokenURI(_tokenIds.current(), _NFT_url);
+
+        // Store the NFT details in the mapping
+        NFTs[_tokenIds.current()] = NFT(
+            _tokenIds.current(),
+            _NFT_url,
+            randomRank
+        );
     }
 
     function editPriceMint(uint256 _rank, uint256 _newPrice) public {

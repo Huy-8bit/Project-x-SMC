@@ -110,21 +110,30 @@ describe("NFTMarketplace", function () {
     //   console.log("balance: ", balance.toString());
     // });
 
-    // it("Should approve weth", async function () {
-    //   const amount = await heroNFT.getPrice(0);
-    //   console.log("amount: ", amount);
-    //   const result = await wethToken.approve(heroNFT.address, amount);
+    // it("Should crete NFT", async function () {
+    //   const rank = 2;
+    //   const price = await heroNFT.getPrice(rank);
+    //   console.log("price: ", price);
+    //   const tokenId = 90;
+    //   const tokenURI =
+    //     "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json";
+    //   const result = await heroNFT.mintNFTWithId(tokenId, tokenURI, rank, {
+    //     value: price,
+    //   });
     //   console.log("result: ", result);
     // });
-    it("Should crete NFT", async function () {
-      const value = await heroNFT.checkValue();
-      console.log("value: ", value);
-      const tokenId = 7777;
-      const tokenURI =
-        "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json";
-      const result = await heroNFT.mintNFTWithId(tokenId, tokenURI, 0);
+
+    it("Should withdraw eth", async function () {
+      const result = await heroNFT.withdraw();
       console.log("result: ", result);
     });
+
+    // it("Should edit price", async function () {
+    //   const rank = 3;
+    //   const price = utils.parseEther("3");
+    //   const result = await heroNFT.editPriceMint(rank, price);
+    //   console.log("result: ", result);
+    // });
 
     // it("Should listed NFT on marketplace", async function () {
     //   const tokenId = 7;

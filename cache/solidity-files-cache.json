@@ -415,8 +415,8 @@
       ]
     },
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/HeroNFT.sol": {
-      "lastModificationDate": 1690219551468,
-      "contentHash": "81d309901ffbbce6c3a68143688a8f2d",
+      "lastModificationDate": 1690562538196,
+      "contentHash": "460bd9c42589cc2d4c845a09b8083d57",
       "sourceName": "contracts/HeroNFT.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -448,8 +448,7 @@
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
         "@openzeppelin/contracts/token/ERC721/IERC721.sol",
         "@openzeppelin/contracts/access/Ownable.sol",
-        "./HeroMarketPlace.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+        "./HeroMarketPlace.sol"
       ],
       "versionPragmas": [
         "^0.8.0"

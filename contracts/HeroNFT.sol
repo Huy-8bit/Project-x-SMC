@@ -5,9 +5,7 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./HeroMarketPlace.sol";
 
 contract HeroNFT is ERC721URIStorage {
     using Counters for Counters.Counter;
@@ -15,6 +13,7 @@ contract HeroNFT is ERC721URIStorage {
     Counters.Counter private _itemsSold;
     address public owner;
     string public NFT_url;
+    uint256 public limitMint;
     // price for each rank
     uint256[4] public price = [0.1 ether, 0.5 ether, 1 ether, 2 ether];
     enum Rank {
@@ -30,10 +29,30 @@ contract HeroNFT is ERC721URIStorage {
         Rank rank;
     }
 
+    event NFTCreated(uint256 indexed tokenId, string tokenURI, Rank rank);
+
+    struct MintedNFTInfo {
+        uint256 tokenId;
+        uint256 rank;
+        uint256 mintingPrice;
+        address owner_minted;
+        uint256 time_minted;
+    }
+    event NFTMinted(
+        uint256 indexed tokenId,
+        string tokenURI,
+        uint256 rank,
+        uint256 mintingPrice,
+        address owner_minted,
+        uint256 time_minted
+    );
+
     mapping(uint256 => NFT) public NFTs;
+    mapping(address => MintedNFTInfo) public MintedNFTInfs;
 
     constructor() ERC721("Hero NFT", "HR") {
         owner = msg.sender;
+        limitMint = 2;
     }
 
     function withdraw() public payable {
@@ -42,37 +61,60 @@ contract HeroNFT is ERC721URIStorage {
         payable(msg.sender).transfer(balance);
     }
 
+    function editLimitMint(uint256 _newLimit) public {
+        require(msg.sender == owner, "Only owner can edit limit");
+        limitMint = _newLimit;
+    }
+
     function mintNFTWithId(
         uint256 _tokenId,
-        string memory _NFT_url,
-        Rank _rank
+        string memory _NFT_url
     ) public payable {
+        // check nft is minted
+
+        // check time_minted + 1 days < now
+        require(
+            MintedNFTInfs[msg.sender].time_minted + 1 days > block.timestamp,
+            "You can only mint this NFT once per day"
+        );
+
+        // check MintedNFTInfo[tokenId].owner_minted
+        require(
+            MintedNFTInfs[msg.sender].owner_minted == msg.sender,
+            "You are not the owner of this NFT"
+        );
+
+        // Check that the user has already obtained the minting info
+        MintedNFTInfo memory mintedInfo = MintedNFTInfs[msg.sender];
+
+        require(
+            mintedInfo.mintingPrice > 0,
+            "You must call calculateRandomNFTInfo first"
+        );
+
         require(!_exists(_tokenId), "Token ID already exists");
         require(
-            balanceOf(msg.sender) < 2 || msg.sender == owner,
-            "You can only own 2 NFTs at most"
+            balanceOf(msg.sender) < limitMint,
+            "You have reached the limit of minting"
         );
-        require(
-            _rank == Rank.Common ||
-                _rank == Rank.Rare ||
-                _rank == Rank.Epic ||
-                _rank == Rank.Legendary,
-            "Invalid rank"
-        );
-        uint256 mintingPrice = getPrice(uint256(_rank));
-        require(msg.value >= mintingPrice, "Insufficient ether sent");
-        _tokenIds.increment();
 
+        uint256 mintingPrice = mintedInfo.mintingPrice;
+        require(msg.value >= mintingPrice, "Insufficient ether sent");
+
+        _tokenIds.increment();
         _mint(msg.sender, _tokenId);
         _setTokenURI(_tokenId, _NFT_url);
 
-        NFTs[_tokenId] = NFT(_tokenId, _NFT_url, _rank);
+        NFTs[_tokenId] = NFT(_tokenId, _NFT_url, Rank(mintedInfo.rank));
+        emit NFTCreated(_tokenId, _NFT_url, Rank(mintedInfo.rank));
+        delete MintedNFTInfs[msg.sender];
     }
 
-    function mintRandomNFT(string memory _NFT_url) public payable {
+    function calculateRandomNFTInfo() public returns (MintedNFTInfo memory) {
+        require(balanceOf(msg.sender) < 2, "You can only own 2 NFTs at most");
         require(
-            balanceOf(msg.sender) < 2 || msg.sender == owner,
-            "You can only own 2 NFTs at most"
+            MintedNFTInfs[msg.sender].tokenId == 0,
+            "This NFT has already been minted"
         );
 
         // Generate a random number between 0 and 99 (inclusive)
@@ -103,21 +145,35 @@ contract HeroNFT is ERC721URIStorage {
 
         // Get the minting price for the chosen rarity
         uint256 mintingPrice = getPrice(uint256(randomRank));
-        require(msg.value >= mintingPrice, "Insufficient ether sent");
 
-        // Increment the tokenIds counter
-        _tokenIds.increment();
-
-        // Mint the NFT with the generated token ID and given URL
-        _mint(msg.sender, _tokenIds.current());
-        _setTokenURI(_tokenIds.current(), _NFT_url);
-
-        // Store the NFT details in the mapping
-        NFTs[_tokenIds.current()] = NFT(
-            _tokenIds.current(),
-            _NFT_url,
-            randomRank
+        MintedNFTInfo memory mintedInfo = MintedNFTInfo(
+            randomNumber,
+            uint256(randomRank),
+            mintingPrice,
+            msg.sender,
+            block.timestamp
         );
+
+        // save mintedInfo to MintedNFTInfs
+        MintedNFTInfs[msg.sender] = mintedInfo;
+
+        emit NFTMinted(
+            randomNumber,
+            NFT_url,
+            uint256(randomRank),
+            mintingPrice,
+            msg.sender,
+            block.timestamp
+        );
+
+        return mintedInfo;
+    }
+
+    // get info of minted NFT
+    function getMintedNFTInfo(
+        address _owners
+    ) public view returns (MintedNFTInfo memory) {
+        return MintedNFTInfs[_owners];
     }
 
     function editPriceMint(uint256 _rank, uint256 _newPrice) public {
@@ -183,15 +239,3 @@ contract HeroNFT is ERC721URIStorage {
         return mintedNFTs;
     }
 }
-
-// function createNFT(
-//     string memory _NFT_url,
-//     Rank _rank
-// ) public returns (uint256) {
-//     _tokenIds.increment();
-//     uint256 newItemId = _tokenIds.current();
-//     _mint(msg.sender, newItemId);
-//     _setTokenURI(newItemId, _NFT_url);
-//     NFTs[newItemId] = NFT(newItemId, _NFT_url, _rank);
-//     return newItemId;
-// }

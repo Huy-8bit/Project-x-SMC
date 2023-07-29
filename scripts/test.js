@@ -10,64 +10,57 @@ require("dotenv").config();
 // comandline: npx hardhat test scripts/test.js --network sepolia
 
 const nftFilePath = "./deployment/HeroNFT.json";
-const HeroTokenFilePath = "./deployment/HeroToken.json";
-const HeroItemFilePath = "./deployment/HeroItem.json";
-const HeroMarketPlaceFilePath = "./deployment/HeroMarketPlace.json";
+// const HeroTokenFilePath = "./deployment/HeroToken.json";
+// const HeroItemFilePath = "./deployment/HeroItem.json";
+// const HeroMarketPlaceFilePath = "./deployment/HeroMarketPlace.json";
 
 // Read data from an NFT . JSON file
 const nftJsonData = fs.readFileSync(nftFilePath, "utf-8");
 const nftData = JSON.parse(nftJsonData);
 const NFTAddress = nftData.HeroNFTAddress;
 
-// Read data from WibuToken's JSON file
-const HeroTokenJsonData = fs.readFileSync(HeroTokenFilePath, "utf-8");
-const heroTokenData = JSON.parse(HeroTokenJsonData);
-const tokenAddress = heroTokenData.HeroTokenAddress;
+// // Read data from HeroToken's JSON file
+// const HeroTokenJsonData = fs.readFileSync(HeroTokenFilePath, "utf-8");
+// const heroTokenData = JSON.parse(HeroTokenJsonData);
+// const tokenAddress = heroTokenData.HeroTokenAddress;
 
-// Read data from HeroItem's JSON file
-const HeroItemJsonData = fs.readFileSync(HeroItemFilePath, "utf-8");
-const HeroItemData = JSON.parse(HeroItemJsonData);
-const HeroItemAddress = HeroItemData.HeroItemAddress;
+// // Read data from HeroItem's JSON file
+// const HeroItemJsonData = fs.readFileSync(HeroItemFilePath, "utf-8");
+// const HeroItemData = JSON.parse(HeroItemJsonData);
+// const HeroItemAddress = HeroItemData.HeroItemAddress;
 
-// read data from HeroMarketPlace's JSON file
-const HeroMarketPlaceJsonData = fs.readFileSync(
-  HeroMarketPlaceFilePath,
-  "utf-8"
-);
-const HeroMarketPlaceData = JSON.parse(HeroMarketPlaceJsonData);
-const HeroMarketPlaceAddress = HeroMarketPlaceData.HeroMarketPlaceAddress;
+// // read data from HeroMarketPlace's JSON file
+// const HeroMarketPlaceJsonData = fs.readFileSync(
+//   HeroMarketPlaceFilePath,
+//   "utf-8"
+// );
+// const HeroMarketPlaceData = JSON.parse(HeroMarketPlaceJsonData);
+// const HeroMarketPlaceAddress = HeroMarketPlaceData.HeroMarketPlaceAddress;
 
 const addres_recipient = "0xFd883589837bEEFf3dFdB97A821E0c71FF9BA20A";
 
 describe("NFTMarketplace", function () {
-  let WibuMarketPlace;
-  let wibuMarketPlace;
-  let owner;
-
   beforeEach(async function () {
     HeroNFT = await ethers.getContractFactory("HeroNFT");
     heroNFT = await HeroNFT.attach(NFTAddress);
-    HeroToken = await ethers.getContractFactory("HeroToken");
-    heroToken = await HeroToken.attach(tokenAddress);
-    HeroItem = await ethers.getContractFactory("HeroItem");
-    heroItem = await HeroItem.attach(HeroItemAddress);
-    HeroMarketPlace = await ethers.getContractFactory("HeroMarketPlace");
-    heroMarketPlace = await HeroMarketPlace.attach(HeroMarketPlaceAddress);
-    WETH = await ethers.getContractFactory("ERC20");
-    wethToken = await WETH.attach(process.env.WETH);
-
+    // HeroToken = await ethers.getContractFactory("HeroToken");
+    // heroToken = await HeroToken.attach(tokenAddress);
+    // HeroItem = await ethers.getContractFactory("HeroItem");
+    // heroItem = await HeroItem.attach(HeroItemAddress);
+    // HeroMarketPlace = await ethers.getContractFactory("HeroMarketPlace");
+    // heroMarketPlace = await HeroMarketPlace.attach(HeroMarketPlaceAddress);
     [owner] = await ethers.getSigners();
   });
 
   describe("NFT", function () {
-    it("should return address", async function () {
-      console.log("owner: ", owner.address);
-      console.log("NFTAddress: ", NFTAddress);
-      console.log("tokenAddress: ", tokenAddress);
-      console.log("heroItem: ", HeroItemAddress);
-      console.log("HeroMarketPlaceAddress: ", HeroMarketPlaceAddress);
-      console.log("WETH: ", wethToken.address);
-    });
+    // it("should return address", async function () {
+    //   console.log("owner: ", owner.address);
+    //   console.log("NFTAddress: ", NFTAddress);
+    //   console.log("tokenAddress: ", tokenAddress);
+    //   console.log("heroItem: ", HeroItemAddress);
+    //   console.log("HeroMarketPlaceAddress: ", HeroMarketPlaceAddress);
+    //   console.log("WETH: ", wethToken.address);
+    // });
     // it("Should transfer heroToken", async function () {
     //   const amount = utils.parseEther("15000000000");
     //   const result = await heroToken.transfer(
@@ -104,37 +97,50 @@ describe("NFTMarketplace", function () {
     //   );
     //   console.log("result: ", result);
     // });
-
     // it("Should return balance of owner", async function () {
     //   const balance = await heroNFT.checkBalance();
     //   console.log("balance: ", balance.toString());
     // });
-
+    // it("Should create info NFT random", async function () {
+    //   const result = await heroNFT.calculateRandomNFTInfo();
+    //   await new Promise((resolve) => setTimeout(resolve, 20000));
+    //   console.log("result: ", result);
+    // });
+    // it("Should get info NFT random", async function () {
+    //   const result = await heroNFT.getMintedNFTInfo(owner.address);
+    //   console.log("result: ", result);
+    // });
     // it("Should crete NFT", async function () {
-    //   const rank = 2;
-    //   const price = await heroNFT.getPrice(rank);
+    //   const getInfoNFT = await heroNFT.getMintedNFTInfo(owner.address);
+    //   console.log("getInfoNFT: ", getInfoNFT);
+    //   const tokenId = getInfoNFT.tokenId.toString();
+    //   const rank = getInfoNFT.rank.toString();
+    //   const price = getInfoNFT.mintingPrice.toString();
+    //   console.log("tokenId: ", tokenId);
+    //   console.log("rank: ", rank);
     //   console.log("price: ", price);
-    //   const tokenId = 90;
     //   const tokenURI =
     //     "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json";
-    //   const result = await heroNFT.mintNFTWithId(tokenId, tokenURI, rank, {
+    //   const result = await heroNFT.mintNFTWithId(tokenId, tokenURI, {
     //     value: price,
     //   });
     //   console.log("result: ", result);
     // });
-
-    it("Should withdraw eth", async function () {
-      const result = await heroNFT.withdraw();
-      console.log("result: ", result);
-    });
-
+    // it("Should return NFTRank of nft ", async function () {
+    //   const tokenId = 30748987;
+    //   const NFTRank = await heroNFT.getNFTRank(tokenId);
+    //   console.log("NFTRank: ", NFTRank);
+    // });
+    // it("Should withdraw eth", async function () {
+    //   const result = await heroNFT.withdraw();
+    //   console.log("result: ", result);
+    // });
     // it("Should edit price", async function () {
     //   const rank = 3;
     //   const price = utils.parseEther("3");
     //   const result = await heroNFT.editPriceMint(rank, price);
     //   console.log("result: ", result);
     // });
-
     // it("Should listed NFT on marketplace", async function () {
     //   const tokenId = 7;
     //   const result = await heroMarketPlace.ListedNFT(

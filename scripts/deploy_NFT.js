@@ -6,10 +6,9 @@ const utils = ethers.utils;
 
 // comandline: npx hardhat run scripts/deploy_NFT.js --network sepolia
 
-const nftFilePath = "./deployment/HeroNFT.json";
-const TokenFilePath = "./deployment/HeroToken.json";
-const HeroMarketPlaceFilePath = "./deployment/HeroMarketPlace.json";
-const HeroItemFilePath = "./deployment/HeroItem.json";
+const nftFilePath = "./deployment/BaseXNFT.json";
+const TokenFilePath = "./deployment/BaseXToken.json";
+const BaseXMarketPlaceFilePath = "./deployment/BaseXMarketPlace.json";
 require("dotenv").config();
 
 async function main() {
@@ -18,60 +17,49 @@ async function main() {
   console.log("Deploying contracts with the account:", deployer.address);
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
-  // // deploy Token
-  // const Token = await ethers.getContractFactory("HeroToken");
+  // deploy Token
+  // const Token = await ethers.getContractFactory("BaseXToken");
   // const token = await Token.deploy();
   // await token.deployed();
   // console.log("Token address:", token.address);
   // console.log("Token total supply:", (await token.totalSupply()).toString());
   // const TokenData = {
-  //   HeroTokenAddress: token.address,
+  //   BaseXTokenAddress: token.address,
   // };
   // const TokenJsonData = JSON.stringify(TokenData, null, 2);
   // fs.writeFileSync(TokenFilePath, TokenJsonData);
 
   // deploy NFT
-  const NFT = await ethers.getContractFactory("HeroNFT");
+  const NFT = await ethers.getContractFactory("BaseXNFT");
   const nft = await NFT.deploy();
   await nft.deployed();
   console.log("NFT address: ", nft.address);
   const nftData = {
-    HeroNFTAddress: nft.address,
+    BaseXNFTAddress: nft.address,
   };
   const nftJsonData = JSON.stringify(nftData, null, 2);
   fs.writeFileSync(nftFilePath, nftJsonData);
-  // // deploy MyERC1155Token
-  // const HeroItem = await ethers.getContractFactory("HeroItem");
-  // const heroItem = await HeroItem.deploy(
-  //   "https://abcoathup.github.io/SampleERC1155/api/token/{id}.json"
-  // );
-  // await heroItem.deployed();
-  // console.log("HeroItem address: ", heroItem.address);
-  // const HeroItemAddressData = {
-  //   HeroItemAddress: heroItem.address,
-  // };
-  // const HeroItemDataJsonData = JSON.stringify(HeroItemAddressData, null, 2);
-  // fs.writeFileSync(HeroItemFilePath, HeroItemDataJsonData);
+
   // // deploy NFTMarketplace
 
   // const Wibu_NFTMarketplace = await ethers.getContractFactory(
-  //   "HeroMarketPlace"
+  //   "BaseXMarketPlace"
   // );
-  // const HeroMarketPlace = await Wibu_NFTMarketplace.deploy(
+  // const BaseXMarketPlace = await Wibu_NFTMarketplace.deploy(
   //   token.address,
   //   nft.address,
-  //   heroItem.address
+  //   baseXItem.address
   // );
   // console.log("NFTAddress: ", nft.address);
   // console.log("tokenAddress: ", token.address);
-  // console.log("heroItemAddress: ", heroItem.address);
-  // await HeroMarketPlace.deployed();
-  // console.log("HeroMarketPlace address: ", HeroMarketPlace.address);
-  // const HeroMarketPlaceData = {
-  //   HeroMarketPlaceAddress: HeroMarketPlace.address,
+  // console.log("baseXItemAddress: ", baseXItem.address);
+  // await BaseXMarketPlace.deployed();
+  // console.log("BaseXMarketPlace address: ", BaseXMarketPlace.address);
+  // const BaseXMarketPlaceData = {
+  //   BaseXMarketPlaceAddress: BaseXMarketPlace.address,
   // };
-  // const HeroMarketPlaceJsonData = JSON.stringify(HeroMarketPlaceData, null, 2);
-  // fs.writeFileSync(HeroMarketPlaceFilePath, HeroMarketPlaceJsonData);
+  // const BaseXMarketPlaceJsonData = JSON.stringify(BaseXMarketPlaceData, null, 2);
+  // fs.writeFileSync(BaseXMarketPlaceFilePath, BaseXMarketPlaceJsonData);
 
   console.log("Deployment completed. Data saved to respective JSON files.");
 }

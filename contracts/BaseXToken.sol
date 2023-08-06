@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract HeroToken is ERC20("Hero Token", "HRT"), Ownable {
+contract BaseXToken is ERC20("BaseX Token", "HRT"), Ownable {
     uint256 private cap = 100_000_000_000 * 10 ** 18;
 
     constructor() public {
@@ -17,7 +17,7 @@ contract HeroToken is ERC20("Hero Token", "HRT"), Ownable {
     function mint(address _to, uint256 _amount) public onlyOwner {
         require(
             ERC20.totalSupply() + _amount <= cap,
-            "HeroToken: cap exceeded"
+            "BaseXToken: cap exceeded"
         );
         _mint(_to, _amount);
     }

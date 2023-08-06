@@ -7,9 +7,9 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./HeroMarketPlace.sol";
+import "./BaseXMarketPlace.sol";
 
-contract HeroNFT is ERC721URIStorage {
+contract BaseXNFT is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     Counters.Counter private _itemsSold;
@@ -39,7 +39,7 @@ contract HeroNFT is ERC721URIStorage {
 
     mapping(uint256 => NFT) public NFTs;
 
-    constructor() ERC721("Hero NFT", "HR") {
+    constructor() ERC721("BaseX NFT", "HR") {
         owner = msg.sender;
         limitMint = 2;
     }
@@ -193,9 +193,9 @@ contract HeroNFT is ERC721URIStorage {
 // import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 // import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 // import "@openzeppelin/contracts/access/Ownable.sol";
-// import "./HeroMarketPlace.sol";
+// import "./BaseXMarketPlace.sol";
 
-// contract HeroNFT is ERC721URIStorage {
+// contract BaseXNFT is ERC721URIStorage {
 //     using Counters for Counters.Counter;
 //     Counters.Counter private _tokenIds;
 //     Counters.Counter private _itemsSold;
@@ -224,7 +224,7 @@ contract HeroNFT is ERC721URIStorage {
 
 //     mapping(uint256 => NFT) public NFTs;
 
-//     constructor() ERC721("Hero NFT", "HR") {
+//     constructor() ERC721("BaseX NFT", "HR") {
 //         owner = msg.sender;
 //     }
 

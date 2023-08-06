@@ -1,44 +1,6 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/HeroItem.sol": {
-      "lastModificationDate": 1690215431416,
-      "contentHash": "93e50129fba28c7fbbfccc9f706e5abc",
-      "sourceName": "contracts/HeroItem.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "HeroItem"
-      ]
-    },
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
       "lastModificationDate": 1690181260961,
       "contentHash": "5a20b2cad87ddb61c7a3a6af21289e28",
@@ -369,129 +331,6 @@
       ],
       "artifacts": [
         "IERC165"
-      ]
-    },
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/HeroMarketPlace.sol": {
-      "lastModificationDate": 1690181125627,
-      "contentHash": "01e0497b9c5d671d25581c5acfa2ca23",
-      "sourceName": "contracts/HeroMarketPlace.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "hardhat/console.sol",
-        "./HeroNFT.sol",
-        "./HeroToken.sol",
-        "@openzeppelin/contracts/utils/math/SafeMath.sol",
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "./HeroItem.sol",
-        "./HeroMarketPlace.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "HeroMarketPlace"
-      ]
-    },
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/HeroNFT.sol": {
-      "lastModificationDate": 1690644161273,
-      "contentHash": "79cd749712da824c17fd005dd0d5e5d2",
-      "sourceName": "contracts/HeroNFT.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "hardhat/console.sol",
-        "@openzeppelin/contracts/utils/Counters.sol",
-        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "HeroNFT"
-      ]
-    },
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/HeroToken.sol": {
-      "lastModificationDate": 1690215632670,
-      "contentHash": "7f3555caa50a568f0acbb13dc5c19a8a",
-      "sourceName": "contracts/HeroToken.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "HeroToken"
       ]
     },
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/hardhat/console.sol": {
@@ -1116,12 +955,12 @@
         "IERC20Metadata"
       ]
     },
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/WETH.sol": {
-      "lastModificationDate": 1690216831230,
-      "contentHash": "4c0b021c03962dcd7f02d42d8570a25c",
-      "sourceName": "contracts/WETH.sol",
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/BaseXMarketPlace.sol": {
+      "lastModificationDate": 1691322923875,
+      "contentHash": "93e36600a0f6e8a25883eb7b358a47dc",
+      "sourceName": "contracts/BaseXMarketPlace.sol",
       "solcConfig": {
-        "version": "0.4.18",
+        "version": "0.8.18",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -1143,12 +982,97 @@
           }
         }
       },
-      "imports": [],
+      "imports": [
+        "./BaseXNFT.sol",
+        "./BaseXToken.sol",
+        "@openzeppelin/contracts/utils/math/SafeMath.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "./BaseXMarketPlace.sol"
+      ],
       "versionPragmas": [
-        "^0.4.18"
+        "^0.8.0"
       ],
       "artifacts": [
-        "WETH9"
+        "BaseXMarketPlace"
+      ]
+    },
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/BaseXNFT.sol": {
+      "lastModificationDate": 1691327812703,
+      "contentHash": "6394fda9d072b4dd57524940f7e631e3",
+      "sourceName": "contracts/BaseXNFT.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Counters.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "BaseXNFT"
+      ]
+    },
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/BaseXToken.sol": {
+      "lastModificationDate": 1691324799106,
+      "contentHash": "b62a67739ee45a37a6eb3929a08393d0",
+      "sourceName": "contracts/BaseXToken.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "BaseXToken"
       ]
     }
   }

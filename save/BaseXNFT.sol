@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract HeroNFT is ERC721URIStorage {
+contract BaseXNFT is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     Counters.Counter private _itemsSold;
@@ -50,7 +49,7 @@ contract HeroNFT is ERC721URIStorage {
     mapping(uint256 => NFT) public NFTs;
     mapping(address => MintedNFTInfo) public MintedNFTInfs;
 
-    constructor() ERC721("Hero NFT", "HR") {
+    constructor() ERC721("BaseX NFT", "BX") {
         owner = msg.sender;
         limitMint = 2;
     }

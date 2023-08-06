@@ -75,12 +75,12 @@ describe("NFTMarketplace", function () {
     //   const result = await baseXNFT.getAllMyNft();
     //   console.log("result: ", result);
     // });
-    it("Should return NFTRank of nft ", async function () {
-      const tokenId =
-        "30997013614142406733736512295088090167947821475420338503716517640044622001673";
-      const NFTRank = await baseXNFT.getNFTRank(tokenId);
-      console.log("NFTRank: ", NFTRank);
-    });
+    // it("Should return NFTRank of nft ", async function () {
+    //   const tokenId =
+    //     "30997013614142406733736512295088090167947821475420338503716517640044622001673";
+    //   const NFTRank = await baseXNFT.getNFTRank(tokenId);
+    //   console.log("NFTRank: ", NFTRank);
+    // });
     // it("Should withdraw eth", async function () {
     //   const result = await baseXNFT.withdraw();
     //   console.log("result: ", result);

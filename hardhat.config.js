@@ -16,6 +16,9 @@ module.exports = {
       accounts: [process.env.REAL_ACCOUNTS],
     },
   },
+  mocha: {
+    timeout: 600000, // Tăng thời gian tối đa cho mỗi kiểm thử thành 60 giây
+  },
   solidity: {
     compilers: [
       {

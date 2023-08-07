@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract BaseXToken is ERC20("BaseX Token", "HRT"), Ownable {
     uint256 private cap = 100_000_000_000 * 10 ** 18;
 
-    constructor() public {
+    constructor() {
         _mint(msg.sender, cap);
         transferOwnership(msg.sender);
     }

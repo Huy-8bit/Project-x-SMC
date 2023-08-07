@@ -61,30 +61,57 @@ describe("NFTMarketplace", function () {
       // console.log("BaseXMarketPlaceAddress: ", BaseXMarketPlaceAddress);
     });
 
-    // it("Should crete NFT", async function () {
-    //   const price = await baseXNFT.getPrice();
-    //   const tokenURI =
-    //     "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json";
-    //   const result = await baseXNFT.mintNFT(tokenURI, {
-    //     value: price,
-    //   });
+    // it("Should crete NFT", function (done) {
+    //   (async () => {
+    //     for (var i = 0; i < 10; i++) {
+    //       const price = await baseXNFT.getPrice();
+    //       const tokenURI =
+    //         "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json";
+    //       const result = await baseXNFT.mintNFT(tokenURI, {
+    //         value: price,
+    //       });
+    //       console.log("result: ", result);
+    //       await new Promise((resolve) => setTimeout(resolve, 20000));
+    //     }
+    //     done(); // Gọi hàm done() để thông báo rằng kiểm thử đã hoàn thành
+    //   })();
+    // });
+
+    // it("Should return all rank My NFT", async function () {
+    //   const result = await baseXNFT.getMintedNFTs(owner.address);
+    //   // console.log("result: ", result);
+    //   let arrayRank = [];
+    //   for (var i = 0; i < result.length; i++) {
+    //     const element = result[i];
+    //     arrayRank.push(element.toString());
+    //   }
+    //   console.log("arrayRank: ", arrayRank);
+
+    //   for (var i = 0; i < arrayRank.length; i++) {
+    //     const rank = arrayRank[i];
+    //     const result = await baseXNFT.getNFTRank(arrayRank[i]);
+    //     console.log("result: ", result);
+    //   }
+    // });
+    // it("Should return point", async function () {
+    //   const result = await baseXNFT.getPoint(owner.address);
     //   console.log("result: ", result);
     // });
 
     // it("Should return all My NFT", async function () {
-    //   const result = await baseXNFT.getAllMyNft();
+    //   const result = await baseXNFT.getMintedNFTs(owner.address);
     //   console.log("result: ", result);
     // });
     // it("Should return NFTRank of nft ", async function () {
     //   const tokenId =
-    //     "30997013614142406733736512295088090167947821475420338503716517640044622001673";
+    //     "86387482172344164460254970375293145769050953289522437300678736851351432146875";
     //   const NFTRank = await baseXNFT.getNFTRank(tokenId);
     //   console.log("NFTRank: ", NFTRank);
     // });
-    // it("Should withdraw eth", async function () {
-    //   const result = await baseXNFT.withdraw();
-    //   console.log("result: ", result);
-    // });
+    it("Should withdraw eth", async function () {
+      const result = await baseXNFT.withdraw();
+      console.log("result: ", result);
+    });
   });
 
   // describe("NFT", function () {

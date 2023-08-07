@@ -4,7 +4,7 @@ require("hardhat-deploy");
 require("hardhat-deploy-ethers");
 const utils = ethers.utils;
 
-// comandline: npx hardhat run scripts/deploy_NFT.js --network sepolia
+// comandline: npx hardhat run scripts/deploy.js --network sepolia
 
 const nftFilePath = "./deployment/BaseXNFT.json";
 const TokenFilePath = "./deployment/BaseXToken.json";

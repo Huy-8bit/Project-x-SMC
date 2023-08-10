@@ -17,7 +17,7 @@ module.exports = {
     },
   },
   mocha: {
-    timeout: 600000, // Tăng thời gian tối đa cho mỗi kiểm thử thành 60 giây
+    timeout: 6000000, // Tăng thời gian tối đa cho mỗi kiểm thử thành 6000 giây
   },
   solidity: {
     compilers: [

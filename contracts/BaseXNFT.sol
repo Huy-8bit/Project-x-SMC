@@ -92,8 +92,19 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
             randomRank = Rank.Legendary;
         }
 
+        totalSupply += 1;
+        if (totalSupply >= 15000) {
+            price = 0.0001 ether;
+        } else if (totalSupply >= 10000) {
+            price = 0.00005 ether;
+        } else if (totalSupply >= 5000) {
+            price = 0.00002 ether;
+        } else {
+            price = 0.00000 ether;
+        }
+        lastAddress = msg.sender;
         _tokenIds.increment();
-        uint256 newTokenId = randomNumber;
+        uint256 newTokenId = _tokenIds.current();
         _mint(msg.sender, newTokenId);
         _setTokenURI(newTokenId, _NFT_url);
 
@@ -109,17 +120,6 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
             msg.sender,
             block.timestamp
         );
-        lastAddress = msg.sender;
-        totalSupply += 1;
-        if (totalSupply >= 15000) {
-            price = 0.0001 ether;
-        } else if (totalSupply >= 10000) {
-            price = 0.00005 ether;
-        } else if (totalSupply >= 5000) {
-            price = 0.00002 ether;
-        } else {
-            price = 0.00000 ether;
-        }
     }
 
     function getLastAdress() public view onlyOwner returns (address) {

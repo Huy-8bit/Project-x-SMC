@@ -1,7 +1,7 @@
 env
 node_modules
 build
-artifacts
+# artifacts
 
 .env
 .DS_Store

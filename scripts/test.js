@@ -65,37 +65,39 @@ describe("NFTMarketplace", function () {
     //   const result = await baseXNFT.editLimitMint(1000);
     //   console.log("result: ", result);
     // });
-
-    it("Should crete NFT", function (done) {
-      (async () => {
-        const random = Math.floor(Math.random() * 30) + 1;
-        console.log("random: ", random);
-        for (var i = 0; i < random; i++) {
-          const price = await baseXNFT.getPrice();
-          const tokenURI =
-            "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json";
-          const result = await baseXNFT.mintNFT(tokenURI, {
-            value: price,
-          });
-          console.log("result: ", result);
-          await new Promise((resolve) => setTimeout(resolve, 5000));
-        }
-      })().then(done);
-    });
+    // it("Should edit PriceMint", async function () {
+    //   const result = await baseXNFT.editPriceMint(
+    //     ethers.utils.parseEther("0.00054")
+    //   );
+    //   console.log("result: ", result);
+    // });
+    // it("Should crete NFT", function (done) {
+    //   (async () => {
+    //     const random = Math.floor(Math.random() * 30) + 1;
+    //     console.log("random: ", random);
+    //     for (var i = 0; i < random; i++) {
+    //       const price = await baseXNFT.getPrice();
+    //       const result = await baseXNFT.mintNFT({
+    //         value: price,
+    //       });
+    //       console.log("result: ", result);
+    //       await new Promise((resolve) => setTimeout(resolve, 15000));
+    //     }
+    //   })().then(done);
+    // });
     // it("Should return top mint", async function () {
     //   const result = await baseXNFT.getTopMintingAddresses(1);
     //   console.log("result: ", result);
     // });
+
     // it("Should return all rank My NFT", async function () {
     //   const result = await baseXNFT.getMintedNFTs(owner.address);
-    //   // console.log("result: ", result);
     //   let arrayRank = [];
     //   for (var i = 0; i < result.length; i++) {
     //     const element = result[i];
     //     arrayRank.push(element.toString());
     //   }
     //   console.log("arrayRank: ", arrayRank);
-
     //   for (var i = 0; i < arrayRank.length; i++) {
     //     const rank = arrayRank[i];
     //     const result = await baseXNFT.getNFTRank(arrayRank[i]);
@@ -103,10 +105,14 @@ describe("NFTMarketplace", function () {
     //   }
     // });
 
-    // it("Should return point", async function () {
-    //   const result = await baseXNFT.getPoint(owner.address);
-    //   console.log("result: ", result);
-    // });
+    it("Should return point", async function () {
+      const listAddress = await baseXNFT.getTopMintNFT(11);
+      for (var i = 0; i < listAddress.length; i++) {
+        console.log("Address: ", listAddress[i]);
+        const result = await baseXNFT.getPoint(listAddress[i]);
+        console.log("point: ", result);
+      }
+    });
 
     // it("Should return all My NFT", async function () {
     //   const result = await baseXNFT.getMintedNFTs(owner.address);
@@ -122,6 +128,11 @@ describe("NFTMarketplace", function () {
 
     // it("Should withdraw eth", async function () {
     //   const result = await baseXNFT.withdraw();
+    //   console.log("result: ", result);
+    // });
+
+    // it("Should Rewards", async function () {
+    //   const result = await baseXNFT.withdrawRewards(5, 40);
     //   console.log("result: ", result);
     // });
   });

@@ -15,6 +15,10 @@ module.exports = {
       url: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
       accounts: [process.env.REAL_ACCOUNTS],
     },
+    base: {
+      url: `https://base-goerli.blockpi.network/v1/rpc/public`,
+      accounts: [process.env.REAL_ACCOUNTS],
+    },
   },
   mocha: {
     timeout: 6000000, // Tăng thời gian tối đa cho mỗi kiểm thử thành 6000 giây

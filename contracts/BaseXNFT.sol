@@ -9,9 +9,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract BaseXNFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
+
     Counters.Counter private _tokenIds;
 
     string public NFT_url;
+
     uint256 public limitMint;
 
     uint256 public price;
@@ -19,6 +21,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
     address private lastAddress;
 
     uint256 public totalSupply;
+
     enum Rank {
         Common,
         Rare,
@@ -38,10 +41,28 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         uint256 time_minted
     );
 
+    struct NFTUrls {
+        string urlCommon;
+        string urlRare;
+        string urlEpic;
+        string urlLegendary;
+    }
+
+    NFTUrls private nftUrls =
+        NFTUrls({
+            urlCommon: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json",
+            urlRare: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json",
+            urlEpic: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json",
+            urlLegendary: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json"
+        });
+    bool private priceChanged = false;
+
     mapping(address => uint256[]) private mintedNFTIds;
+
     address[] private mintingAddresses;
 
     mapping(address => uint256) public lastMintTimestamp;
+
     mapping(uint256 => NFT) public NFTs;
 
     constructor() ERC721("BaseX NFT", "BX") {
@@ -51,16 +72,28 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         price = 0.0000 ether;
     }
 
-    function withdraw() public onlyOwner {
-        uint256 balance = address(this).balance;
-        payable(msg.sender).transfer(balance);
-    }
-
     function editLimitMint(uint256 _newLimit) public onlyOwner {
         limitMint = _newLimit;
     }
 
-    function mintNFT(string memory _NFT_url) public payable {
+    function editPriceMint(uint256 _newPrice) public onlyOwner {
+        price = _newPrice;
+        priceChanged = true;
+    }
+
+    function editUrlNFT(string memory _newUrl, uint256 _rank) public onlyOwner {
+        if (_rank == 0) {
+            nftUrls.urlCommon = _newUrl;
+        } else if (_rank == 1) {
+            nftUrls.urlRare = _newUrl;
+        } else if (_rank == 2) {
+            nftUrls.urlEpic = _newUrl;
+        } else if (_rank == 3) {
+            nftUrls.urlLegendary = _newUrl;
+        }
+    }
+
+    function mintNFT() public payable {
         require(
             balanceOf(msg.sender) < limitMint,
             "You have reached the limit of minting"
@@ -95,19 +128,31 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         }
 
         totalSupply += 1;
-        if (totalSupply >= 15000) {
-            price = 0.0001 ether;
-        } else if (totalSupply >= 10000) {
-            price = 0.00005 ether;
-        } else if (totalSupply >= 5000) {
-            price = 0.00002 ether;
-        } else {
-            price = 0.00000 ether;
+        if (priceChanged == false) {
+            if (totalSupply >= 15000) {
+                price = 0.0001 ether;
+            } else if (totalSupply >= 10000) {
+                price = 0.00005 ether;
+            } else if (totalSupply >= 5000) {
+                price = 0.00002 ether;
+            } else {
+                price = 0.00000 ether;
+            }
         }
         lastAddress = msg.sender;
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
         _mint(msg.sender, newTokenId);
+        string memory _NFT_url = "";
+        if (randomRank == Rank.Common) {
+            _NFT_url = nftUrls.urlCommon;
+        } else if (randomRank == Rank.Rare) {
+            _NFT_url = nftUrls.urlRare;
+        } else if (randomRank == Rank.Epic) {
+            _NFT_url = nftUrls.urlEpic;
+        } else {
+            _NFT_url = nftUrls.urlLegendary;
+        }
         _setTokenURI(newTokenId, _NFT_url);
 
         NFT memory newNFT = NFT(newTokenId, randomRank);
@@ -145,8 +190,8 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         return lastAddress;
     }
 
-    function editPriceMint(uint256 _newPrice) public onlyOwner {
-        price = _newPrice;
+    function changePriceChanged() public onlyOwner {
+        priceChanged = false;
     }
 
     function getPrice() public view returns (uint256) {
@@ -192,15 +237,6 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         return mintedNFTIds[user];
     }
 
-    function getAllMyNFT() public view returns (NFT[] memory) {
-        uint256[] memory myNFTs = mintedNFTIds[msg.sender];
-        NFT[] memory myNFTsInfo = new NFT[](myNFTs.length);
-        for (uint256 i = 0; i < myNFTs.length; i++) {
-            myNFTsInfo[i] = NFTs[myNFTs[i]];
-        }
-        return myNFTsInfo;
-    }
-
     function getPoint(address user) public view returns (uint256) {
         uint256[] memory myNFTs = mintedNFTIds[user];
         uint256 point = 0;
@@ -227,19 +263,18 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
         address[] memory topAddresses = new address[](top);
 
-        uint256[] memory sortedIndices = _sortTopMintingAddresses();
+        address[] memory sortedAddresses = _sortTopMintingAddresses();
 
         for (uint256 i = 0; i < top; i++) {
-            topAddresses[i] = mintingAddresses[sortedIndices[i]];
+            topAddresses[i] = sortedAddresses[i];
         }
-
         return topAddresses;
     }
 
     function _sortTopMintingAddresses()
         internal
         view
-        returns (uint256[] memory)
+        returns (address[] memory)
     {
         uint256[] memory indices = new uint256[](mintingAddresses.length);
 
@@ -250,31 +285,54 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         for (uint256 i = 0; i < mintingAddresses.length - 1; i++) {
             for (uint256 j = i + 1; j < mintingAddresses.length; j++) {
                 if (
-                    _calculatePoints(mintingAddresses[i]) <
-                    _calculatePoints(mintingAddresses[j])
+                    getPoint(mintingAddresses[indices[i]]) <
+                    getPoint(mintingAddresses[indices[j]])
                 ) {
                     (indices[i], indices[j]) = (indices[j], indices[i]);
                 }
             }
         }
 
-        return indices;
+        address[] memory sortedAddresses = new address[](
+            mintingAddresses.length
+        );
+
+        for (uint256 i = 0; i < mintingAddresses.length; i++) {
+            sortedAddresses[i] = mintingAddresses[indices[i]];
+        }
+
+        return sortedAddresses;
     }
 
-    function _calculatePoints(address user) internal view returns (uint256) {
-        uint256[] memory myNFTs = mintedNFTIds[user];
-        uint256 point = 0;
-        for (uint256 i = 0; i < myNFTs.length; i++) {
-            if (NFTs[myNFTs[i]].rank == Rank.Common) {
-                point += 1;
-            } else if (NFTs[myNFTs[i]].rank == Rank.Rare) {
-                point += 5;
-            } else if (NFTs[myNFTs[i]].rank == Rank.Epic) {
-                point += 15;
-            } else if (NFTs[myNFTs[i]].rank == Rank.Legendary) {
-                point += 50;
-            }
+    function withdraw() public onlyOwner {
+        uint256 balance = address(this).balance;
+        payable(msg.sender).transfer(balance);
+    }
+
+    function withdrawRewards(
+        uint256 numberOfWinners,
+        uint256 rewardPercentage
+    ) public onlyOwner {
+        require(
+            numberOfWinners > 0,
+            "Number of winners must be greater than zero"
+        );
+        require(
+            numberOfWinners <= mintingAddresses.length,
+            "Number of winners exceeds the number of minting addresses"
+        );
+        require(
+            rewardPercentage > 0 && rewardPercentage <= 100,
+            "Reward percentage must be between 1 and 100"
+        );
+
+        address[] memory topAddresses = getTopMintNFT(numberOfWinners);
+
+        uint256 totalReward = (address(this).balance * rewardPercentage) / 100;
+
+        for (uint256 i = 0; i < numberOfWinners; i++) {
+            payable(topAddresses[i]).transfer(totalReward / numberOfWinners);
         }
-        return point;
+        withdraw();
     }
 }

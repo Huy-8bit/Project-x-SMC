@@ -9,7 +9,7 @@ To get started with Project_X, follow these steps:
 1. Clone this repository to your local machine.
    
    ```bash
-   git clone [repository_url]
+   git clone https://github.com/Huy-8bit/Project-x-SMC.git SMC
     ```
 2. Install all the dependencies.
     
@@ -19,5 +19,25 @@ To get started with Project_X, follow these steps:
 3. Start the application.
     
     ```bash
-    npm start
+    npx hardhat compile
     ```
+4. Deploy the contract.
+    
+    ```bash
+     npx hardhat run scripts/deploy.js --network [network name]
+    ```
+
+5. Verify the contract.
+    
+    ```bash
+    npx hardhat verify --network [network name] [contract address]
+    ```
+
+6. Run the test.
+    
+    ```bash
+    npx hardhat test scripts/test.js --network [network name]
+    ```
+
+
+

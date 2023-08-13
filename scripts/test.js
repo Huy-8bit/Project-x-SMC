@@ -66,22 +66,26 @@ describe("NFTMarketplace", function () {
     //   console.log("result: ", result);
     // });
 
-    // it("Should crete NFT", function (done) {
-    //   (async () => {
-    //     for (var i = 0; i < 4; i++) {
-    //       const price = await baseXNFT.getPrice();
-    //       const tokenURI =
-    //         "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json";
-    //       const result = await baseXNFT.mintNFT(tokenURI, {
-    //         value: price,
-    //       });
-    //       console.log("result: ", result);
-    //       await new Promise((resolve) => setTimeout(resolve, 20000));
-    //     }
-    //     done(); // Gọi hàm done() để thông báo rằng kiểm thử đã hoàn thành
-    //   })();
+    it("Should crete NFT", function (done) {
+      (async () => {
+        const random = Math.floor(Math.random() * 30) + 1;
+        console.log("random: ", random);
+        for (var i = 0; i < random; i++) {
+          const price = await baseXNFT.getPrice();
+          const tokenURI =
+            "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json";
+          const result = await baseXNFT.mintNFT(tokenURI, {
+            value: price,
+          });
+          console.log("result: ", result);
+          await new Promise((resolve) => setTimeout(resolve, 5000));
+        }
+      })().then(done);
+    });
+    // it("Should return top mint", async function () {
+    //   const result = await baseXNFT.getTopMintingAddresses(1);
+    //   console.log("result: ", result);
     // });
-
     // it("Should return all rank My NFT", async function () {
     //   const result = await baseXNFT.getMintedNFTs(owner.address);
     //   // console.log("result: ", result);

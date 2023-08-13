@@ -5,7 +5,7 @@ require("chai");
 require("ethers");
 require("ethereum-waffle");
 require("dotenv").config();
-
+require("@nomicfoundation/hardhat-verify");
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY;
 
 module.exports = {
@@ -18,6 +18,11 @@ module.exports = {
   },
   mocha: {
     timeout: 6000000, // Tăng thời gian tối đa cho mỗi kiểm thử thành 6000 giây
+  },
+  etherscan: {
+    // Your API key for Etherscan
+    // Obtain one at https://etherscan.io/
+    apiKey: "TRD75UM176G352ITIMFI6AA5K8RKAQ9WCB",
   },
   solidity: {
     compilers: [

@@ -39,8 +39,6 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
     );
 
     mapping(address => uint256[]) private mintedNFTIds;
-    address[] private mintingAddresses;
-
     mapping(address => uint256) public lastMintTimestamp;
     mapping(uint256 => NFT) public NFTs;
 
@@ -115,23 +113,6 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         mintedNFTIds[msg.sender].push(newTokenId);
         NFTs[newTokenId] = newNFT;
         lastMintTimestamp[msg.sender] = block.timestamp;
-        // mintingAddresses.push(msg.sender);
-
-        // check msg.sender is in mintingAddresses
-        if (mintingAddresses.length == 0) {
-            mintingAddresses.push(msg.sender);
-        } else {
-            bool isExist = false;
-            for (uint256 i = 0; i < mintingAddresses.length; i++) {
-                if (mintingAddresses[i] == msg.sender) {
-                    isExist = true;
-                    break;
-                }
-            }
-            if (!isExist) {
-                mintingAddresses.push(msg.sender);
-            }
-        }
 
         emit NFTMinted(
             newTokenId,
@@ -202,66 +183,6 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
     }
 
     function getPoint(address user) public view returns (uint256) {
-        uint256[] memory myNFTs = mintedNFTIds[user];
-        uint256 point = 0;
-        for (uint256 i = 0; i < myNFTs.length; i++) {
-            if (NFTs[myNFTs[i]].rank == Rank.Common) {
-                point += 1;
-            } else if (NFTs[myNFTs[i]].rank == Rank.Rare) {
-                point += 5;
-            } else if (NFTs[myNFTs[i]].rank == Rank.Epic) {
-                point += 15;
-            } else if (NFTs[myNFTs[i]].rank == Rank.Legendary) {
-                point += 50;
-            }
-        }
-        return point;
-    }
-
-    function getTopMintNFT(uint256 top) public view returns (address[] memory) {
-        require(top > 0, "Top must be greater than zero");
-        require(
-            top <= mintingAddresses.length,
-            "Top exceeds the number of minting addresses"
-        );
-
-        address[] memory topAddresses = new address[](top);
-
-        uint256[] memory sortedIndices = _sortTopMintingAddresses();
-
-        for (uint256 i = 0; i < top; i++) {
-            topAddresses[i] = mintingAddresses[sortedIndices[i]];
-        }
-
-        return topAddresses;
-    }
-
-    function _sortTopMintingAddresses()
-        internal
-        view
-        returns (uint256[] memory)
-    {
-        uint256[] memory indices = new uint256[](mintingAddresses.length);
-
-        for (uint256 i = 0; i < mintingAddresses.length; i++) {
-            indices[i] = i;
-        }
-
-        for (uint256 i = 0; i < mintingAddresses.length - 1; i++) {
-            for (uint256 j = i + 1; j < mintingAddresses.length; j++) {
-                if (
-                    _calculatePoints(mintingAddresses[i]) <
-                    _calculatePoints(mintingAddresses[j])
-                ) {
-                    (indices[i], indices[j]) = (indices[j], indices[i]);
-                }
-            }
-        }
-
-        return indices;
-    }
-
-    function _calculatePoints(address user) internal view returns (uint256) {
         uint256[] memory myNFTs = mintedNFTIds[user];
         uint256 point = 0;
         for (uint256 i = 0; i < myNFTs.length; i++) {

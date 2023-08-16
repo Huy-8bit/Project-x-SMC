@@ -50,16 +50,19 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     NFTUrls private nftUrls =
         NFTUrls({
-            urlCommon: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json",
-            urlRare: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json",
-            urlEpic: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json",
-            urlLegendary: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZqeKmGoquMG5nFCb9q82WHR4F1Rd3WeMbW1QEPJifHsc/nft.json"
+            urlCommon: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmaLZYtQkeTTXUrkoE4HRGyFiCG6vrBptEGjUtian7rVz9?_gl=1*hm8kj1*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjEyNDIyOS41LjEuMTY5MjEyNDM3Mi42MC4wLjA.",
+            urlRare: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmeMFDUsVPddnZs2L6mKtcsdNCqYiVra7YHjujjQf2rqMD?_gl=1*1at5j8p*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjEyNDIyOS41LjEuMTY5MjEyNDQzMC4yLjAuMA..",
+            urlEpic: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmXsRvGSUHiUoXvKexcZS1HUGGfGpgb5EvC7F2ERAfXu2a?_gl=1*1utwgc8*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjEyNDIyOS41LjEuMTY5MjEyNDQ3MC42MC4wLjA.",
+            urlLegendary: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmS5X7fEU4Y1mdjgMun6RH2dJgxxKs1KwFT2Tvck7motpx?_gl=1*i2o7zh*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjEyNDIyOS41LjEuMTY5MjEyNDUyMC4xMC4wLjA."
         });
+
     bool private priceChanged = false;
 
     mapping(address => uint256[]) private mintedNFTIds;
 
     address[] private mintingAddresses;
+
+    mapping(address => bool) private freeMintAllowed;
 
     mapping(address => uint256) public lastMintTimestamp;
 
@@ -93,12 +96,23 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         }
     }
 
+    function addFreeMintAddress(address _address) public onlyOwner {
+        freeMintAllowed[_address] = true;
+    }
+
+    function removeFreeMintAddress(address _address) public onlyOwner {
+        freeMintAllowed[_address] = false;
+    }
+
     function mintNFT() public payable {
         require(
             balanceOf(msg.sender) < limitMint,
             "You have reached the limit of minting"
         );
-        require(msg.value >= price, "Insufficient ether sent");
+
+        if (!freeMintAllowed[msg.sender]) {
+            require(msg.value >= price, "Insufficient ether sent");
+        }
 
         uint256 randomNumber = uint256(
             keccak256(
@@ -139,6 +153,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
                 price = 0.00000 ether;
             }
         }
+
         lastAddress = msg.sender;
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
@@ -195,6 +210,9 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
     }
 
     function getPrice() public view returns (uint256) {
+        if (freeMintAllowed[msg.sender]) {
+            return 0.0000 ether;
+        }
         return price;
     }
 

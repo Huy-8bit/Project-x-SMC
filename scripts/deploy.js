@@ -8,8 +8,8 @@ const utils = ethers.utils;
 // comandline: npx hardhat verify --network sepolia
 
 const nftFilePath = "./deployment/BaseXNFT.json";
-const TokenFilePath = "./deployment/BaseXToken.json";
-const BaseXMarketPlaceFilePath = "./deployment/BaseXMarketPlace.json";
+// const TokenFilePath = "./deployment/BaseXToken.json";
+// const BaseXMarketPlaceFilePath = "./deployment/BaseXMarketPlace.json";
 require("dotenv").config();
 
 async function main() {

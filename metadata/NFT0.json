@@ -1,0 +1,11 @@
+{
+  "name": "BASEX NFT",
+  "description": "THIS IS A BASEX NFT RANK 0",
+  "image": "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmcYsbMzCGjjP5ULrwxccRomtF1sSHsbHDosxgo3hkkcaY?_gl=1*c7viz5*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjExNzU3Mi40LjEuMTY5MjExOTM2Ny40NC4wLjA.",
+  "attributes": [
+    {
+      "trait_type": "Rarity",
+      "value": "Common"
+    }
+  ]
+}

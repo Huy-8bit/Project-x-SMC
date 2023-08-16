@@ -6,36 +6,15 @@ const fs = require("fs");
 const { id } = require("ethers/lib/utils");
 const utils = ethers.utils;
 require("dotenv").config();
-// const { WETH } = require("@uniswap/v2-periphery");
+
 // comandline: npx hardhat test scripts/test.js --network sepolia
 
 const nftFilePath = "./deployment/BaseXNFT.json";
-// const BaseXTokenFilePath = "./deployment/BaseXToken.json";
-const BaseXItemFilePath = "./deployment/BaseXItem.json";
-// const BaseXMarketPlaceFilePath = "./deployment/BaseXMarketPlace.json";
 
 // Read data from an NFT . JSON file
 const nftJsonData = fs.readFileSync(nftFilePath, "utf-8");
 const nftData = JSON.parse(nftJsonData);
 const NFTAddress = nftData.BaseXNFTAddress;
-
-// // Read data from BaseXToken's JSON file
-// const BaseXTokenJsonData = fs.readFileSync(BaseXTokenFilePath, "utf-8");
-// const baseXTokenData = JSON.parse(BaseXTokenJsonData);
-// const tokenAddress = baseXTokenData.BaseXTokenAddress;
-
-// // Read data from BaseXItem's JSON file
-// const BaseXItemJsonData = fs.readFileSync(BaseXItemFilePath, "utf-8");
-// const BaseXItemData = JSON.parse(BaseXItemJsonData);
-// const BaseXItemAddress = BaseXItemData.BaseXItemAddress;
-
-// // read data from BaseXMarketPlace's JSON file
-// const BaseXMarketPlaceJsonData = fs.readFileSync(
-//   BaseXMarketPlaceFilePath,
-//   "utf-8"
-// );
-// const BaseXMarketPlaceData = JSON.parse(BaseXMarketPlaceJsonData);
-// const BaseXMarketPlaceAddress = BaseXMarketPlaceData.BaseXMarketPlaceAddress;
 
 const addres_recipient = "0xFd883589837bEEFf3dFdB97A821E0c71FF9BA20A";
 
@@ -56,42 +35,60 @@ describe("NFTMarketplace", function () {
     it("should return address", async function () {
       console.log("owner: ", owner.address);
       console.log("NFTAddress: ", NFTAddress);
-      // console.log("tokenAddress: ", tokenAddress);
-      // console.log("baseXItem: ", BaseXItemAddress);
-      // console.log("BaseXMarketPlaceAddress: ", BaseXMarketPlaceAddress);
     });
 
     // it("Should edit limit", async function () {
     //   const result = await baseXNFT.editLimitMint(1000);
     //   console.log("result: ", result);
     // });
+
     // it("Should edit PriceMint", async function () {
     //   const result = await baseXNFT.editPriceMint(
     //     ethers.utils.parseEther("0.00054")
     //   );
-    //   console.log("result: ", result);
+    //   await new Promise((resolve) => setTimeout(resolve, 15000));
+    //   console.log("result: ", result.hash);
     // });
-    // it("Should crete NFT", function (done) {
-    //   (async () => {
-    //     const random = Math.floor(Math.random() * 30) + 1;
-    //     console.log("random: ", random);
-    //     for (var i = 0; i < random; i++) {
-    //       const price = await baseXNFT.getPrice();
-    //       const result = await baseXNFT.mintNFT({
-    //         value: price,
-    //       });
-    //       console.log("result: ", result);
-    //       await new Promise((resolve) => setTimeout(resolve, 15000));
-    //     }
-    //   })().then(done);
+
+    // it("Should edit Free mint address", async function () {
+    //   const listAddress = [
+    //     "0xFd883589837bEEFf3dFdB97A821E0c71FF9BA20A",
+    //     "0xf30607e0cdEc7188d50d2bb384073bF1D5b02fA4",
+    //     "0xC77E5F3B7099bA3b3A4b20292d010696b97177fc",
+    //   ];
+    //   for (var i = 0; i < listAddress.length; i++) {
+    //     const result = await baseXNFT.addFreeMintAddress(listAddress[i]);
+    //     await new Promise((resolve) => setTimeout(resolve, 15000));
+    //     console.log("result: ", result.hash);
+    //   }
     // });
+
+    it("Should crete NFT", function (done) {
+      (async () => {
+        const random = Math.floor(Math.random() * 30) + 1;
+        console.log("random: ", random);
+        for (var i = 0; i < random; i++) {
+          console.log("minter: ", owner.address);
+          const price = await baseXNFT.getPrice();
+          console.log("price: ", price.toString());
+          const result = await baseXNFT.mintNFT({
+            value: price,
+          });
+          console.log("result: ", result.hash);
+          await new Promise((resolve) => setTimeout(resolve, 15000));
+        }
+      })().then(done);
+    });
+
     // it("Should return top mint", async function () {
     //   const result = await baseXNFT.getTopMintingAddresses(1);
     //   console.log("result: ", result);
     // });
 
     // it("Should return all rank My NFT", async function () {
-    //   const result = await baseXNFT.getMintedNFTs(owner.address);
+    //   const result = await baseXNFT.getMintedNFTs(
+    //     "0xe8E8FfF9a25F17e0fACE7795993a39eb3032adDc"
+    //   );
     //   let arrayRank = [];
     //   for (var i = 0; i < result.length; i++) {
     //     const element = result[i];
@@ -105,14 +102,16 @@ describe("NFTMarketplace", function () {
     //   }
     // });
 
-    it("Should return point", async function () {
-      const listAddress = await baseXNFT.getTopMintNFT(11);
-      for (var i = 0; i < listAddress.length; i++) {
-        console.log("Address: ", listAddress[i]);
-        const result = await baseXNFT.getPoint(listAddress[i]);
-        console.log("point: ", result);
-      }
-    });
+    // it("Should return all point", async function () {
+    //   const listAddress = await baseXNFT.getTopMintNFT(11);
+    //   for (var i = 0; i < listAddress.length; i++) {
+    //     console.log("Address: ", listAddress[i]);
+    //     const result = await baseXNFT.getPoint(listAddress[i]);
+    //     console.log("point: ", result);
+    //     const listNFT = await baseXNFT.getMintedNFTs(listAddress[i]);
+    //     console.log("listNFT: ", listNFT);
+    //   }
+    // });
 
     // it("Should return all My NFT", async function () {
     //   const result = await baseXNFT.getMintedNFTs(owner.address);

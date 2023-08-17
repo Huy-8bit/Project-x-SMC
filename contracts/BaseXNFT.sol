@@ -50,15 +50,15 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     NFTUrls private nftUrls =
         NFTUrls({
-            urlCommon: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmaLZYtQkeTTXUrkoE4HRGyFiCG6vrBptEGjUtian7rVz9?_gl=1*hm8kj1*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjEyNDIyOS41LjEuMTY5MjEyNDM3Mi42MC4wLjA.",
-            urlRare: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmeMFDUsVPddnZs2L6mKtcsdNCqYiVra7YHjujjQf2rqMD?_gl=1*1at5j8p*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjEyNDIyOS41LjEuMTY5MjEyNDQzMC4yLjAuMA..",
-            urlEpic: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmXsRvGSUHiUoXvKexcZS1HUGGfGpgb5EvC7F2ERAfXu2a?_gl=1*1utwgc8*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjEyNDIyOS41LjEuMTY5MjEyNDQ3MC42MC4wLjA.",
-            urlLegendary: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmS5X7fEU4Y1mdjgMun6RH2dJgxxKs1KwFT2Tvck7motpx?_gl=1*i2o7zh*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjEyNDIyOS41LjEuMTY5MjEyNDUyMC4xMC4wLjA."
+            urlCommon: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmazZBEU3WFhi82koPghdAKe4bfQA2aNsQKT3pVp6eh2GA?_gl=1*1tkahws*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjI3NzE0MC43LjEuMTY5MjI3OTg2Ny42MC4wLjA.",
+            urlRare: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmfDiRRUGPTDYaAVKUyuBMM1W4dgPTSwFfDhkFvj7heLMw?_gl=1*qbr92x*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjI3NzE0MC43LjEuMTY5MjI3OTkwNy4yMC4wLjA.",
+            urlEpic: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZt6fz5eriQh34kBAb4BtmCgtsCBw54G1r4jBwm9Uir6F?_gl=1*o1jo3i*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjI3NzE0MC43LjEuMTY5MjI3OTkzMS42MC4wLjA.",
+            urlLegendary: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmSj6bRVov9TnoCs4muSWWcqeuK553xgtUfajph6kmK1M2?_gl=1*19msuwh*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjI3NzE0MC43LjEuMTY5MjI3OTk0NC40Ny4wLjA."
         });
 
     bool private priceChanged = false;
 
-    mapping(address => uint256[]) private mintedNFTIds;
+    // mapping(address => uint256[]) private mintedNFTIds;
 
     address[] private mintingAddresses;
 
@@ -68,11 +68,23 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     mapping(uint256 => NFT) public NFTs;
 
-    constructor() ERC721("BaseX NFT", "BX") {
+    uint256[] private Rarity;
+
+    bool private withdrawFlag;
+
+    address private ownerWithDraw;
+
+    constructor(address _ownerWithDraw) ERC721("BaseX NFT", "BX") {
         limitMint = 100;
         lastAddress = msg.sender;
         totalSupply = 0;
         price = 0.0000 ether;
+        Rarity.push(60);
+        Rarity.push(25);
+        Rarity.push(10);
+        Rarity.push(5);
+        withdrawFlag = false;
+        ownerWithDraw = _ownerWithDraw;
     }
 
     function editLimitMint(uint256 _newLimit) public onlyOwner {
@@ -82,6 +94,10 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
     function editPriceMint(uint256 _newPrice) public onlyOwner {
         price = _newPrice;
         priceChanged = true;
+    }
+
+    function changeflagPriceChanged(bool _flag) public onlyOwner {
+        priceChanged = _flag;
     }
 
     function editUrlNFT(string memory _newUrl, uint256 _rank) public onlyOwner {
@@ -117,6 +133,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         uint256 randomNumber = uint256(
             keccak256(
                 abi.encodePacked(
+                    block.number,
                     block.timestamp,
                     block.difficulty,
                     msg.sender,
@@ -128,13 +145,18 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         uint256 calculates = randomNumber % 100;
         Rank randomRank;
 
-        if (calculates < 60) {
+        if (calculates < Rarity[0] && calculates >= 0) {
             // it's 60% for common
             randomRank = Rank.Common;
-        } else if (calculates < 85) {
+        } else if (
+            calculates < Rarity[0] + Rarity[1] && calculates >= Rarity[0]
+        ) {
             // it's 25% for rare
             randomRank = Rank.Rare;
-        } else if (calculates < 95) {
+        } else if (
+            calculates < Rarity[0] + Rarity[1] + Rarity[2] &&
+            calculates >= Rarity[0] + Rarity[1]
+        ) {
             // it's 10% for epic
             randomRank = Rank.Epic;
         } else {
@@ -172,10 +194,9 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
         NFT memory newNFT = NFT(newTokenId, randomRank);
 
-        mintedNFTIds[msg.sender].push(newTokenId);
+        // mintedNFTIds[msg.sender].push(newTokenId);
         NFTs[newTokenId] = newNFT;
         lastMintTimestamp[msg.sender] = block.timestamp;
-        // mintingAddresses.push(msg.sender);
 
         // check msg.sender is in mintingAddresses
         if (mintingAddresses.length == 0) {
@@ -207,6 +228,17 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     function changePriceChanged() public onlyOwner {
         priceChanged = false;
+    }
+
+    function changeRarity(uint256[] memory _newRarity) public onlyOwner {
+        require(_newRarity.length == 4, "Rarity must have 4 elements");
+        require(
+            _newRarity[0] + _newRarity[1] + _newRarity[2] + _newRarity[3] ==
+                100,
+            "The sum of rarity must be 100"
+        );
+
+        Rarity = _newRarity;
     }
 
     function getPrice() public view returns (uint256) {
@@ -249,14 +281,23 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         return super.supportsInterface(interfaceId);
     }
 
-    function getMintedNFTs(
-        address user
-    ) public view returns (uint256[] memory) {
-        return mintedNFTIds[user];
+    function getOwnedNFTs(address user) public view returns (uint256[] memory) {
+        uint256 ownedCount = balanceOf(user);
+        uint256[] memory ownedNFTs = new uint256[](ownedCount);
+
+        uint256 currentIndex = 0;
+        for (uint256 tokenId = 1; tokenId <= _tokenIds.current(); tokenId++) {
+            if (_exists(tokenId) && ownerOf(tokenId) == user) {
+                ownedNFTs[currentIndex] = tokenId;
+                currentIndex++;
+            }
+        }
+
+        return ownedNFTs;
     }
 
-    function getPoint(address user) public view returns (uint256) {
-        uint256[] memory myNFTs = mintedNFTIds[user];
+    function getPoint(address _user) public view returns (uint256) {
+        uint256[] memory myNFTs = getOwnedNFTs(_user); // huongiuhuy
         uint256 point = 0;
         for (uint256 i = 0; i < myNFTs.length; i++) {
             if (NFTs[myNFTs[i]].rank == Rank.Common) {
@@ -270,23 +311,6 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
             }
         }
         return point;
-    }
-
-    function getTopMintNFT(uint256 top) public view returns (address[] memory) {
-        require(top > 0, "Top must be greater than zero");
-        require(
-            top <= mintingAddresses.length,
-            "Top exceeds the number of minting addresses"
-        );
-
-        address[] memory topAddresses = new address[](top);
-
-        address[] memory sortedAddresses = _sortTopMintingAddresses();
-
-        for (uint256 i = 0; i < top; i++) {
-            topAddresses[i] = sortedAddresses[i];
-        }
-        return topAddresses;
     }
 
     function _sortTopMintingAddresses()
@@ -322,7 +346,30 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         return sortedAddresses;
     }
 
+    function getTopMintNFT(uint256 top) public view returns (address[] memory) {
+        require(top > 0, "Top must be greater than zero");
+        require(
+            top <= mintingAddresses.length,
+            "Top exceeds the number of minting addresses"
+        );
+
+        address[] memory topAddresses = new address[](top);
+
+        address[] memory sortedAddresses = _sortTopMintingAddresses();
+
+        for (uint256 i = 0; i < top; i++) {
+            topAddresses[i] = sortedAddresses[i];
+        }
+        return topAddresses;
+    }
+
+    function changeWithdrawFlag() public onlyOwner {
+        require(msg.sender == ownerWithDraw, "You are not the owner");
+        withdrawFlag = true;
+    }
+
     function withdraw() public onlyOwner {
+        require(withdrawFlag == true, "You can not withdraw at this time");
         uint256 balance = address(this).balance;
         payable(msg.sender).transfer(balance);
     }
@@ -351,6 +398,19 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         for (uint256 i = 0; i < numberOfWinners; i++) {
             payable(topAddresses[i]).transfer(totalReward / numberOfWinners);
         }
-        withdraw();
+        // withdraw();
     }
 }
+
+// if (calculates < 60 && calculates >= 0) {
+//     // it's 60% for common
+//     randomRank = Rank.Common;
+// } else if (calculates < 85 && calculates >= 60) {
+//     // it's 25% for rare
+//     randomRank = Rank.Rare;
+// } else if (calculates < 95 && calculates >= 85) {
+//     // it's 10% for epic
+//     randomRank = Rank.Epic;
+// } else {
+//     randomRank = Rank.Legendary;
+// }

@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/BaseXNFT.sol": {
-      "lastModificationDate": 1692124540206,
-      "contentHash": "d8c714a5f36887071dddc536a6e0a327",
+      "lastModificationDate": 1692282508344,
+      "contentHash": "a490c9d39e72a1161cc25ed5d370434d",
       "sourceName": "contracts/BaseXNFT.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -76,47 +76,9 @@
         "Counters"
       ]
     },
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol": {
-      "lastModificationDate": 1691547270757,
-      "contentHash": "de368c6a87e159c86544ae5041b58cf3",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../ERC721.sol",
-        "../../../interfaces/IERC4906.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ERC721URIStorage"
-      ]
-    },
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
-      "lastModificationDate": 1691547270728,
-      "contentHash": "95602b04f0b53f1139f4668d123ddeb7",
+      "lastModificationDate": 1692240504981,
+      "contentHash": "8f5b77365c99571d9fcf5e597b8f0746",
       "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -157,6 +119,44 @@
         "ERC721"
       ]
     },
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol": {
+      "lastModificationDate": 1691547270757,
+      "contentHash": "de368c6a87e159c86544ae5041b58cf3",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../ERC721.sol",
+        "../../../interfaces/IERC4906.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC721URIStorage"
+      ]
+    },
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
       "lastModificationDate": 1691547271024,
       "contentHash": "5a20b2cad87ddb61c7a3a6af21289e28",
@@ -192,81 +192,6 @@
       ],
       "artifacts": [
         "Ownable"
-      ]
-    },
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/interfaces/IERC4906.sol": {
-      "lastModificationDate": 1691547270898,
-      "contentHash": "d3f355e15269d1476d86c84730cebb5e",
-      "sourceName": "@openzeppelin/contracts/interfaces/IERC4906.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./IERC165.sol",
-        "./IERC721.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IERC4906"
-      ]
-    },
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
-      "lastModificationDate": 1691547270949,
-      "contentHash": "48de4c9a3a4ae5ef66a2aa620843413f",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../../utils/introspection/IERC165.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IERC721"
       ]
     },
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
@@ -342,10 +267,10 @@
         "IERC721Receiver"
       ]
     },
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
-      "lastModificationDate": 1691547270675,
-      "contentHash": "0e7db055ce108f9da7bb6686a00287c0",
-      "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/utils/Address.sol": {
+      "lastModificationDate": 1691547270472,
+      "contentHash": "211ffd288c1588ba8c10eae668ca3c66",
+      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
@@ -369,51 +294,12 @@
           }
         }
       },
-      "imports": [
-        "./IERC165.sol"
-      ],
+      "imports": [],
       "versionPragmas": [
-        "^0.8.0"
+        "^0.8.1"
       ],
       "artifacts": [
-        "ERC165"
-      ]
-    },
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
-      "lastModificationDate": 1691547270955,
-      "contentHash": "efbc0d15b80a74e34dbe8da0f3e879bb",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../IERC721.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IERC721Metadata"
+        "Address"
       ]
     },
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/utils/Context.sol": {
@@ -451,10 +337,10 @@
         "Context"
       ]
     },
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/utils/Address.sol": {
-      "lastModificationDate": 1691547270472,
-      "contentHash": "211ffd288c1588ba8c10eae668ca3c66",
-      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+      "lastModificationDate": 1691547270675,
+      "contentHash": "0e7db055ce108f9da7bb6686a00287c0",
+      "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
@@ -478,47 +364,88 @@
           }
         }
       },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.1"
+      "imports": [
+        "./IERC165.sol"
       ],
-      "artifacts": [
-        "Address"
-      ]
-    },
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
-      "lastModificationDate": 1691547270860,
-      "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
-      "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
-      "solcConfig": {
-        "version": "0.8.18",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "IERC165"
+        "ERC165"
+      ]
+    },
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
+      "lastModificationDate": 1691547270949,
+      "contentHash": "48de4c9a3a4ae5ef66a2aa620843413f",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../utils/introspection/IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721"
+      ]
+    },
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
+      "lastModificationDate": 1691547270955,
+      "contentHash": "efbc0d15b80a74e34dbe8da0f3e879bb",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721Metadata"
       ]
     },
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/utils/math/Math.sol": {
@@ -591,10 +518,45 @@
         "SignedMath"
       ]
     },
-    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/interfaces/IERC165.sol": {
-      "lastModificationDate": 1691547270858,
-      "contentHash": "ee9624272968c23d93d4c2e39f06e6e2",
-      "sourceName": "@openzeppelin/contracts/interfaces/IERC165.sol",
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+      "lastModificationDate": 1691547270860,
+      "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
+      "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC165"
+      ]
+    },
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/interfaces/IERC4906.sol": {
+      "lastModificationDate": 1691547270898,
+      "contentHash": "d3f355e15269d1476d86c84730cebb5e",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC4906.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
@@ -619,12 +581,15 @@
         }
       },
       "imports": [
-        "../utils/introspection/IERC165.sol"
+        "./IERC165.sol",
+        "./IERC721.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
-      "artifacts": []
+      "artifacts": [
+        "IERC4906"
+      ]
     },
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/interfaces/IERC721.sol": {
       "lastModificationDate": 1691547270939,
@@ -655,6 +620,41 @@
       },
       "imports": [
         "../token/ERC721/IERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": []
+    },
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/interfaces/IERC165.sol": {
+      "lastModificationDate": 1691547270858,
+      "contentHash": "ee9624272968c23d93d4c2e39f06e6e2",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC165.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/introspection/IERC165.sol"
       ],
       "versionPragmas": [
         "^0.8.0"

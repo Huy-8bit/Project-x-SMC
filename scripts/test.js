@@ -50,40 +50,41 @@ describe("NFTMarketplace", function () {
     //   console.log("result: ", result.hash);
     // });
 
-    // it("Should edit Free mint address", async function () {
-    //   const listAddress = [
-    //     "0xFd883589837bEEFf3dFdB97A821E0c71FF9BA20A",
-    //     "0xf30607e0cdEc7188d50d2bb384073bF1D5b02fA4",
-    //     "0xC77E5F3B7099bA3b3A4b20292d010696b97177fc",
-    //   ];
-    //   for (var i = 0; i < listAddress.length; i++) {
-    //     const result = await baseXNFT.addFreeMintAddress(listAddress[i]);
-    //     await new Promise((resolve) => setTimeout(resolve, 15000));
-    //     console.log("result: ", result.hash);
-    //   }
-    // });
-
-    it("Should crete NFT", function (done) {
-      (async () => {
-        const random = Math.floor(Math.random() * 30) + 1;
-        console.log("random: ", random);
-        for (var i = 0; i < random; i++) {
-          console.log("minter: ", owner.address);
-          const price = await baseXNFT.getPrice();
-          console.log("price: ", price.toString());
-          const result = await baseXNFT.mintNFT({
-            value: price,
-          });
-          console.log("result: ", result.hash);
-          await new Promise((resolve) => setTimeout(resolve, 15000));
-        }
-      })().then(done);
+    it("Should edit Free mint address", async function () {
+      const listAddress = [
+        "0xFd883589837bEEFf3dFdB97A821E0c71FF9BA20A",
+        "0xf30607e0cdEc7188d50d2bb384073bF1D5b02fA4",
+        "0xC77E5F3B7099bA3b3A4b20292d010696b97177fc",
+      ];
+      for (var i = 0; i < listAddress.length; i++) {
+        const result = await baseXNFT.addFreeMintAddress(listAddress[i]);
+        await new Promise((resolve) => setTimeout(resolve, 15000));
+        console.log("result: ", result.hash);
+      }
     });
 
-    // it("Should return top mint", async function () {
-    //   const result = await baseXNFT.getTopMintingAddresses(1);
-    //   console.log("result: ", result);
+    // it("Should crete NFT", function (done) {
+    //   (async () => {
+    //     const random = Math.floor(Math.random() * 30) + 1;
+    //     console.log("random: ", random);
+    //     for (var i = 0; i < random; i++) {
+    //       console.log("minter: ", owner.address);
+    //       const price = await baseXNFT.getPrice();
+    //       console.log("price: ", price.toString());
+    //       const result = await baseXNFT.mintNFT({
+    //         value: price,
+    //         // gasLimit: 272441,
+    //       });
+    //       console.log("result: ", result.hash);
+    //       await new Promise((resolve) => setTimeout(resolve, 15000));
+    //     }
+    //   })().then(done);
     // });
+
+    it("Should return top mint", async function () {
+      const result = await baseXNFT.getTopMintNFT(2);
+      console.log("result: ", result);
+    });
 
     // it("Should return all rank My NFT", async function () {
     //   const result = await baseXNFT.getMintedNFTs(
@@ -102,19 +103,21 @@ describe("NFTMarketplace", function () {
     //   }
     // });
 
-    // it("Should return all point", async function () {
-    //   const listAddress = await baseXNFT.getTopMintNFT(11);
-    //   for (var i = 0; i < listAddress.length; i++) {
-    //     console.log("Address: ", listAddress[i]);
-    //     const result = await baseXNFT.getPoint(listAddress[i]);
-    //     console.log("point: ", result);
-    //     const listNFT = await baseXNFT.getMintedNFTs(listAddress[i]);
-    //     console.log("listNFT: ", listNFT);
-    //   }
-    // });
+    it("Should return all point", async function () {
+      const listAddress = await baseXNFT.getTopMintNFT(2);
+      for (var i = 0; i < listAddress.length; i++) {
+        console.log("Address: ", listAddress[i]);
+        const result = await baseXNFT.getPoint(listAddress[i]);
+        console.log("point: ", result);
+        const listNFT = await baseXNFT.getMintedNFTs(listAddress[i]);
+        console.log("listNFT: ", listNFT);
+      }
+    });
 
     // it("Should return all My NFT", async function () {
-    //   const result = await baseXNFT.getMintedNFTs(owner.address);
+    //   const result = await baseXNFT.getMintedNFTs(
+    //     "0xf30607e0cdEc7188d50d2bb384073bF1D5b02fA4"
+    //   );
     //   console.log("result: ", result);
     // });
 

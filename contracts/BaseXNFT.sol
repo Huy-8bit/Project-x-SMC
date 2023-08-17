@@ -34,12 +34,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         Rank rank;
     }
 
-    event NFTMinted(
-        uint256 indexed tokenId,
-        uint256 rank,
-        address owner_minted,
-        uint256 time_minted
-    );
+    event NFTMinted(uint256 indexed tokenId, uint256 rank, uint256 time_minted);
 
     struct NFTUrls {
         string urlCommon;
@@ -64,7 +59,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     mapping(address => bool) private freeMintAllowed;
 
-    mapping(address => uint256) public lastMintTimestamp;
+    // mapping(address => uint256) public lastMintTimestamp;
 
     mapping(uint256 => NFT) public NFTs;
 
@@ -73,6 +68,10 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
     bool private withdrawFlag;
 
     address private ownerWithDraw;
+
+    uint256 private totalLimitMint;
+
+    bool private mintChanged;
 
     constructor(address _ownerWithDraw) ERC721("BaseX NFT", "BX") {
         limitMint = 100;
@@ -85,6 +84,8 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         Rarity.push(5);
         withdrawFlag = false;
         ownerWithDraw = _ownerWithDraw;
+        totalLimitMint = 100;
+        mintChanged = false;
     }
 
     function editLimitMint(uint256 _newLimit) public onlyOwner {
@@ -120,15 +121,113 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         freeMintAllowed[_address] = false;
     }
 
-    function mintNFT() public payable {
+    function mintChangedFlag(bool _flag) public onlyOwner {
+        mintChanged = _flag;
+    }
+
+    function mintNFTPriorityQueue(address _ownerNFT) internal {
         require(
             balanceOf(msg.sender) < limitMint,
             "You have reached the limit of minting"
         );
 
-        if (!freeMintAllowed[msg.sender]) {
-            require(msg.value >= price, "Insufficient ether sent");
+        require(
+            totalLimitMint >= totalSupply,
+            "You have reached the limit of minting"
+        );
+
+        uint256 randomNumber = uint256(
+            keccak256(
+                abi.encodePacked(
+                    block.number,
+                    block.timestamp,
+                    block.difficulty,
+                    msg.sender,
+                    lastAddress
+                )
+            )
+        );
+
+        uint256 calculates = randomNumber % 100;
+        Rank randomRank;
+
+        if (calculates < Rarity[0] && calculates >= 0) {
+            // it's 60% for common
+            randomRank = Rank.Common;
+        } else if (
+            calculates < Rarity[0] + Rarity[1] && calculates >= Rarity[0]
+        ) {
+            // it's 25% for rare
+            randomRank = Rank.Rare;
+        } else if (
+            calculates < Rarity[0] + Rarity[1] + Rarity[2] &&
+            calculates >= Rarity[0] + Rarity[1]
+        ) {
+            // it's 10% for epic
+            randomRank = Rank.Epic;
+        } else {
+            randomRank = Rank.Legendary;
         }
+
+        totalSupply += 1;
+        if (priceChanged == false) {
+            if (totalSupply >= 15000) {
+                price = 0.0001 ether;
+            } else if (totalSupply >= 10000) {
+                price = 0.00005 ether;
+            } else if (totalSupply >= 5000) {
+                price = 0.00002 ether;
+            } else {
+                price = 0.00000 ether;
+            }
+        }
+
+        lastAddress = _ownerNFT;
+        _tokenIds.increment();
+        uint256 newTokenId = _tokenIds.current();
+        _mint(_ownerNFT, newTokenId);
+        string memory _NFT_url = "";
+        if (randomRank == Rank.Common) {
+            _NFT_url = nftUrls.urlCommon;
+        } else if (randomRank == Rank.Rare) {
+            _NFT_url = nftUrls.urlRare;
+        } else if (randomRank == Rank.Epic) {
+            _NFT_url = nftUrls.urlEpic;
+        } else {
+            _NFT_url = nftUrls.urlLegendary;
+        }
+        _setTokenURI(newTokenId, _NFT_url);
+
+        NFT memory newNFT = NFT(newTokenId, randomRank);
+
+        // mintedNFTIds[msg.sender].push(newTokenId);
+        NFTs[newTokenId] = newNFT;
+        // lastMintTimestamp[_ownerNFT] = block.timestamp;
+
+        // check msg.sender is in mintingAddresses
+        if (mintingAddresses.length == 0) {
+            mintingAddresses.push(_ownerNFT);
+        } else {
+            bool isExist = false;
+            for (uint256 i = 0; i < mintingAddresses.length; i++) {
+                if (mintingAddresses[i] == _ownerNFT) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                mintingAddresses.push(_ownerNFT);
+            }
+        }
+
+        emit NFTMinted(newTokenId, uint256(randomRank), block.timestamp);
+    }
+
+    function mintNFTUser(address _ownerNFT) internal {
+        require(
+            balanceOf(msg.sender) < limitMint,
+            "You have reached the limit of minting"
+        );
 
         uint256 randomNumber = uint256(
             keccak256(
@@ -196,38 +295,42 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
         // mintedNFTIds[msg.sender].push(newTokenId);
         NFTs[newTokenId] = newNFT;
-        lastMintTimestamp[msg.sender] = block.timestamp;
+        // lastMintTimestamp[_ownerNFT] = block.timestamp;
 
         // check msg.sender is in mintingAddresses
         if (mintingAddresses.length == 0) {
-            mintingAddresses.push(msg.sender);
+            mintingAddresses.push(_ownerNFT);
         } else {
             bool isExist = false;
             for (uint256 i = 0; i < mintingAddresses.length; i++) {
-                if (mintingAddresses[i] == msg.sender) {
+                if (mintingAddresses[i] == _ownerNFT) {
                     isExist = true;
                     break;
                 }
             }
             if (!isExist) {
-                mintingAddresses.push(msg.sender);
+                mintingAddresses.push(_ownerNFT);
             }
         }
 
-        emit NFTMinted(
-            newTokenId,
-            uint256(randomRank),
-            msg.sender,
-            block.timestamp
-        );
+        emit NFTMinted(newTokenId, uint256(randomRank), block.timestamp);
+    }
+
+    function mintNFT() public payable {
+        if (mintChanged == false) {
+            require(freeMintAllowed[msg.sender], "You are not allowed to mint");
+            mintNFTPriorityQueue(msg.sender);
+        }
+        if (!freeMintAllowed[msg.sender]) {
+            require(msg.value >= price, "Insufficient ether sent");
+        }
+        if (mintChanged == true) {
+            mintNFTUser(msg.sender);
+        }
     }
 
     function getLastAdress() public view onlyOwner returns (address) {
         return lastAddress;
-    }
-
-    function changePriceChanged() public onlyOwner {
-        priceChanged = false;
     }
 
     function changeRarity(uint256[] memory _newRarity) public onlyOwner {

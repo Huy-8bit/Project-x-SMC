@@ -24,7 +24,7 @@ async function main() {
 
   // deploy NFT
   const NFT = await ethers.getContractFactory("BaseXNFT");
-  const nft = await NFT.deploy();
+  const nft = await NFT.deploy("0xf30607e0cdEc7188d50d2bb384073bF1D5b02fA4");
   await nft.deployed({
     gasLimit: 500000000,
   });

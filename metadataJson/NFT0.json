@@ -1,0 +1,11 @@
+{
+  "name": "XBASE NFT",
+  "description": "THIS IS A XBASE NFT RANK 0",
+  "image": "https://ipfs.io/ipfs/QmQA6fBrrWkbZhBBqzbSr19jA2NUgn6ZntzEz4usHfmoiz?filename=1.webp",
+  "attributes": [
+    {
+      "trait_type": "Rarity",
+      "value": "Common"
+    }
+  ]
+}

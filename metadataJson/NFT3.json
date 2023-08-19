@@ -1,0 +1,11 @@
+{
+  "name": "XBASE NFT",
+  "description": "THIS IS A XBASE NFT RANK 3",
+  "image": "https://ipfs.io/ipfs/QmU55Jcj6LamAUC8tWrnuN6qjAXJMo9d3yf7FYHE51s8QN?filename=4.webp",
+  "attributes": [
+    {
+      "trait_type": "Rarity",
+      "value": "Legendary"
+    }
+  ]
+}

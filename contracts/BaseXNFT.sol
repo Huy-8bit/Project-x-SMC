@@ -45,10 +45,10 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     NFTUrls private nftUrls =
         NFTUrls({
-            urlCommon: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmazZBEU3WFhi82koPghdAKe4bfQA2aNsQKT3pVp6eh2GA?_gl=1*1tkahws*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjI3NzE0MC43LjEuMTY5MjI3OTg2Ny42MC4wLjA.",
-            urlRare: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmfDiRRUGPTDYaAVKUyuBMM1W4dgPTSwFfDhkFvj7heLMw?_gl=1*qbr92x*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjI3NzE0MC43LjEuMTY5MjI3OTkwNy4yMC4wLjA.",
-            urlEpic: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmZt6fz5eriQh34kBAb4BtmCgtsCBw54G1r4jBwm9Uir6F?_gl=1*o1jo3i*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjI3NzE0MC43LjEuMTY5MjI3OTkzMS42MC4wLjA.",
-            urlLegendary: "https://red-flying-lynx-578.mypinata.cloud/ipfs/QmSj6bRVov9TnoCs4muSWWcqeuK553xgtUfajph6kmK1M2?_gl=1*19msuwh*_ga*MTcyNDU4MTA5LjE2OTAxOTM3MzY.*_ga_5RMPXG14TE*MTY5MjI3NzE0MC43LjEuMTY5MjI3OTk0NC40Ny4wLjA."
+            urlCommon: "https://ipfs.io/ipfs/QmcaDRKb5cM5CN6GDMBYw4m3DtUuHVZ6fSeCqiV9YMqZww?filename=NFT0.json",
+            urlRare: "https://ipfs.io/ipfs/QmcJ1FADWWFWupH83KPVmc1qhNAmiKmHbM5g5TjvtRg9e5?filename=NFT1.json",
+            urlEpic: "https://ipfs.io/ipfs/QmTgqMd7MYNLNGQyhszEPgwcaiumY54k99tZNabFdqYiVf?filename=NFT2.json",
+            urlLegendary: "https://ipfs.io/ipfs/QmRQmLmoxC8aCoDUkSqUTKusG3t2p5MdtU1qjGAG9ssL5u?filename=NFT3.json"
         });
 
     bool private priceChanged = false;

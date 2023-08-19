@@ -64,6 +64,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
     mapping(uint256 => NFT) public NFTs;
 
     uint256[] private Rarity;
+    // event RarityChanged(uint256[] newRarity);
 
     bool private withdrawFlag;
 
@@ -73,7 +74,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     bool private mintChanged;
 
-    constructor(address _ownerWithDraw) ERC721("BaseX NFT", "BX") {
+    constructor(address _ownerWithDraw) ERC721("BaseX Spaceship", "BX") {
         limitMint = 100;
         lastAddress = msg.sender;
         totalSupply = 0;
@@ -125,110 +126,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         mintChanged = _flag;
     }
 
-    function mintNFTPriorityQueue(address _ownerNFT) internal {
-        require(
-            balanceOf(msg.sender) < limitMint,
-            "You have reached the limit of minting"
-        );
-
-        require(
-            totalLimitMint >= totalSupply,
-            "You have reached the limit of minting"
-        );
-
-        uint256 randomNumber = uint256(
-            keccak256(
-                abi.encodePacked(
-                    block.number,
-                    block.timestamp,
-                    block.difficulty,
-                    msg.sender,
-                    lastAddress
-                )
-            )
-        );
-
-        uint256 calculates = randomNumber % 100;
-        Rank randomRank;
-
-        if (calculates < Rarity[0] && calculates >= 0) {
-            // it's 60% for common
-            randomRank = Rank.Common;
-        } else if (
-            calculates < Rarity[0] + Rarity[1] && calculates >= Rarity[0]
-        ) {
-            // it's 25% for rare
-            randomRank = Rank.Rare;
-        } else if (
-            calculates < Rarity[0] + Rarity[1] + Rarity[2] &&
-            calculates >= Rarity[0] + Rarity[1]
-        ) {
-            // it's 10% for epic
-            randomRank = Rank.Epic;
-        } else {
-            randomRank = Rank.Legendary;
-        }
-
-        totalSupply += 1;
-        if (priceChanged == false) {
-            if (totalSupply >= 15000) {
-                price = 0.0001 ether;
-            } else if (totalSupply >= 10000) {
-                price = 0.00005 ether;
-            } else if (totalSupply >= 5000) {
-                price = 0.00002 ether;
-            } else {
-                price = 0.00000 ether;
-            }
-        }
-
-        lastAddress = _ownerNFT;
-        _tokenIds.increment();
-        uint256 newTokenId = _tokenIds.current();
-        _mint(_ownerNFT, newTokenId);
-        string memory _NFT_url = "";
-        if (randomRank == Rank.Common) {
-            _NFT_url = nftUrls.urlCommon;
-        } else if (randomRank == Rank.Rare) {
-            _NFT_url = nftUrls.urlRare;
-        } else if (randomRank == Rank.Epic) {
-            _NFT_url = nftUrls.urlEpic;
-        } else {
-            _NFT_url = nftUrls.urlLegendary;
-        }
-        _setTokenURI(newTokenId, _NFT_url);
-
-        NFT memory newNFT = NFT(newTokenId, randomRank);
-
-        // mintedNFTIds[msg.sender].push(newTokenId);
-        NFTs[newTokenId] = newNFT;
-        // lastMintTimestamp[_ownerNFT] = block.timestamp;
-
-        // check msg.sender is in mintingAddresses
-        if (mintingAddresses.length == 0) {
-            mintingAddresses.push(_ownerNFT);
-        } else {
-            bool isExist = false;
-            for (uint256 i = 0; i < mintingAddresses.length; i++) {
-                if (mintingAddresses[i] == _ownerNFT) {
-                    isExist = true;
-                    break;
-                }
-            }
-            if (!isExist) {
-                mintingAddresses.push(_ownerNFT);
-            }
-        }
-
-        emit NFTMinted(newTokenId, uint256(randomRank), block.timestamp);
-    }
-
-    function mintNFTUser(address _ownerNFT) internal {
-        require(
-            balanceOf(msg.sender) < limitMint,
-            "You have reached the limit of minting"
-        );
-
+    function mintNFT(address _ownerNFT) internal {
         uint256 randomNumber = uint256(
             keccak256(
                 abi.encodePacked(
@@ -319,13 +217,22 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
     function mintNFT() public payable {
         if (mintChanged == false) {
             require(freeMintAllowed[msg.sender], "You are not allowed to mint");
-            mintNFTPriorityQueue(msg.sender);
+            require(
+                totalLimitMint >= totalSupply,
+                "You have reached the limit of minting"
+            );
+            mintNFT(msg.sender);
         }
-        if (!freeMintAllowed[msg.sender]) {
-            require(msg.value >= price, "Insufficient ether sent");
-        }
+
         if (mintChanged == true) {
-            mintNFTUser(msg.sender);
+            require(
+                balanceOf(msg.sender) < limitMint,
+                "You have reached the limit of minting"
+            );
+            if (!freeMintAllowed[msg.sender]) {
+                require(msg.value >= price, "Insufficient ether sent");
+            }
+            mintNFT(msg.sender);
         }
     }
 
@@ -342,6 +249,11 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         );
 
         Rarity = _newRarity;
+        // emit RarityChanged(_newRarity);
+    }
+
+    function getRarity() public view returns (uint256[] memory) {
+        return Rarity;
     }
 
     function getPrice() public view returns (uint256) {
@@ -349,10 +261,6 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
             return 0.0000 ether;
         }
         return price;
-    }
-
-    function getNFTURI(uint256 tokenId) public view returns (string memory) {
-        return tokenURI(tokenId);
     }
 
     function getNFTRank(uint256 tokenId) public view returns (Rank) {
@@ -370,12 +278,6 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     function _burn(uint256 tokenId) internal override(ERC721URIStorage) {
         super._burn(tokenId);
-    }
-
-    function tokenURI(
-        uint256 tokenId
-    ) public view override(ERC721URIStorage) returns (string memory) {
-        return super.tokenURI(tokenId);
     }
 
     function supportsInterface(
@@ -466,9 +368,9 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         return topAddresses;
     }
 
-    function changeWithdrawFlag() public onlyOwner {
+    function changeWithdrawFlag(bool _flag) external {
         require(msg.sender == ownerWithDraw, "You are not the owner");
-        withdrawFlag = true;
+        withdrawFlag = _flag;
     }
 
     function withdraw() public onlyOwner {
@@ -505,15 +407,12 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
     }
 }
 
-// if (calculates < 60 && calculates >= 0) {
-//     // it's 60% for common
-//     randomRank = Rank.Common;
-// } else if (calculates < 85 && calculates >= 60) {
-//     // it's 25% for rare
-//     randomRank = Rank.Rare;
-// } else if (calculates < 95 && calculates >= 85) {
-//     // it's 10% for epic
-//     randomRank = Rank.Epic;
-// } else {
-//     randomRank = Rank.Legendary;
+// function getNFTURI(uint256 tokenId) public view returns (string memory) {
+//     return tokenURI(tokenId);
+// }
+
+// function tokenURI(
+//     uint256 tokenId
+// ) public view override(ERC721URIStorage) returns (string memory) {
+//     return super.tokenURI(tokenId);
 // }

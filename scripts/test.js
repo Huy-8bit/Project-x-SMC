@@ -90,23 +90,23 @@ describe("NFTMarketplace", function () {
     //   }
     // });
 
-    // it("Should crete NFT", function (done) {
-    //   (async () => {
-    //     const random = Math.floor(Math.random() * 30) + 1;
-    //     console.log("random: ", random);
-    //     for (var i = 0; i < random; i++) {
-    //       console.log("minter: ", owner.address);
-    //       const price = await baseXNFT.getPrice();
-    //       console.log("price: ", price.toString());
-    //       const result = await baseXNFT.mintNFT({
-    //         value: price,
-    //         // gasLimit: 272441,
-    //       });
-    //       console.log("result: ", result.hash);
-    //       await new Promise((resolve) => setTimeout(resolve, 15000));
-    //     }
-    //   })().then(done);
-    // });
+    it("Should crete NFT", function (done) {
+      (async () => {
+        const random = Math.floor(Math.random() * 30) + 1;
+        console.log("random: ", random);
+        for (var i = 0; i < random; i++) {
+          console.log("minter: ", owner.address);
+          const price = await baseXNFT.getPrice();
+          console.log("price: ", price.toString());
+          const result = await baseXNFT.mintNFT({
+            value: price,
+            // gasLimit: 272441,
+          });
+          console.log("result: ", result.hash);
+          await new Promise((resolve) => setTimeout(resolve, 15000));
+        }
+      })().then(done);
+    });
 
     // it("Should return top mint", async function () {
     //   const result = await baseXNFT.getTopMintNFT(2);

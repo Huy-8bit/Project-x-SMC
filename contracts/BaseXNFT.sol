@@ -22,6 +22,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     uint256 public totalSupply;
 
+    uint256 public limitTotalMinted;
     enum Rank {
         Common,
         Rare,
@@ -74,8 +75,10 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     bool private mintChanged;
 
+    uint256 private limitMintWhilteList;
+
     constructor(address _ownerWithDraw) ERC721("BaseX Spaceship", "BX") {
-        limitMint = 100;
+        limitMint = 10;
         lastAddress = msg.sender;
         totalSupply = 0;
         price = 0.0000 ether;
@@ -87,6 +90,8 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         ownerWithDraw = _ownerWithDraw;
         totalLimitMint = 100;
         mintChanged = false;
+        limitTotalMinted = 20000;
+        limitMintWhilteList = 20;
     }
 
     function editLimitMint(uint256 _newLimit) public onlyOwner {
@@ -100,18 +105,6 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     function changeflagPriceChanged(bool _flag) public onlyOwner {
         priceChanged = _flag;
-    }
-
-    function editUrlNFT(string memory _newUrl, uint256 _rank) public onlyOwner {
-        if (_rank == 0) {
-            nftUrls.urlCommon = _newUrl;
-        } else if (_rank == 1) {
-            nftUrls.urlRare = _newUrl;
-        } else if (_rank == 2) {
-            nftUrls.urlEpic = _newUrl;
-        } else if (_rank == 3) {
-            nftUrls.urlLegendary = _newUrl;
-        }
     }
 
     function addFreeMintAddress(address _address) public onlyOwner {
@@ -162,21 +155,19 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
         totalSupply += 1;
         if (priceChanged == false) {
-            if (totalSupply >= 15000) {
-                price = 0.0001 ether;
-            } else if (totalSupply >= 10000) {
-                price = 0.00005 ether;
-            } else if (totalSupply >= 5000) {
+            if (totalSupply + limitMintWhilteList >= 40) {
                 price = 0.00002 ether;
+            } else if (totalSupply + limitMintWhilteList >= 10) {
+                price = 0.00001 ether;
             } else {
-                price = 0.00000 ether;
+                price = 0.000000 ether;
             }
         }
 
-        lastAddress = msg.sender;
+        lastAddress = _ownerNFT;
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
-        _mint(msg.sender, newTokenId);
+        _mint(_ownerNFT, newTokenId);
         string memory _NFT_url = "";
         if (randomRank == Rank.Common) {
             _NFT_url = nftUrls.urlCommon;
@@ -191,9 +182,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
         NFT memory newNFT = NFT(newTokenId, randomRank);
 
-        // mintedNFTIds[msg.sender].push(newTokenId);
         NFTs[newTokenId] = newNFT;
-        // lastMintTimestamp[_ownerNFT] = block.timestamp;
 
         // check msg.sender is in mintingAddresses
         if (mintingAddresses.length == 0) {
@@ -215,7 +204,15 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
     }
 
     function mintNFT() public payable {
+        require(
+            totalSupply < limitTotalMinted,
+            "This collection has reached the limit of minting"
+        );
+
         if (mintChanged == false) {
+            if (totalSupply >= limitMintWhilteList) {
+                mintChanged = true;
+            }
             require(freeMintAllowed[msg.sender], "You are not allowed to mint");
             require(
                 totalLimitMint >= totalSupply,
@@ -249,7 +246,6 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         );
 
         Rarity = _newRarity;
-        // emit RarityChanged(_newRarity);
     }
 
     function getRarity() public view returns (uint256[] memory) {
@@ -400,19 +396,69 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
         uint256 totalReward = (address(this).balance * rewardPercentage) / 100;
 
-        for (uint256 i = 0; i < numberOfWinners; i++) {
-            payable(topAddresses[i]).transfer(totalReward / numberOfWinners);
+        uint256 top10Percentage = (totalReward * 30) / 100;
+        uint256 top15Percentage = (totalReward * 25) / 100;
+        uint256 top25Percentage = (totalReward * 20) / 100;
+        uint256 remainingPercentage = (totalReward * 15) / 100;
+
+        uint256 top10Count = (numberOfWinners * 10) / 100;
+        uint256 top15Count = (numberOfWinners * 15) / 100;
+        uint256 top25Count = (numberOfWinners * 25) / 100;
+        uint256 remainingCount = numberOfWinners -
+            top10Count -
+            top15Count -
+            top25Count;
+
+        for (uint256 i = 0; i < top10Count; i++) {
+            payable(topAddresses[i]).transfer(top10Percentage / top10Count);
         }
-        // withdraw();
+
+        for (uint256 i = top10Count; i < top10Count + top15Count; i++) {
+            payable(topAddresses[i]).transfer(top15Percentage / top15Count);
+        }
+
+        for (
+            uint256 i = top10Count + top15Count;
+            i < top10Count + top15Count + top25Count;
+            i++
+        ) {
+            payable(topAddresses[i]).transfer(top25Percentage / top25Count);
+        }
+
+        for (
+            uint256 i = top10Count + top15Count + top25Count;
+            i < numberOfWinners;
+            i++
+        ) {
+            payable(topAddresses[i]).transfer(
+                remainingPercentage / remainingCount
+            );
+        }
     }
 }
 
-// function getNFTURI(uint256 tokenId) public view returns (string memory) {
-//     return tokenURI(tokenId);
-// }
+// function withdrawRewards(
+//     uint256 numberOfWinners,
+//     uint256 rewardPercentage
+// ) public onlyOwner {
+//     require(
+//         numberOfWinners > 0,
+//         "Number of winners must be greater than zero"
+//     );
+//     require(
+//         numberOfWinners <= mintingAddresses.length,
+//         "Number of winners exceeds the number of minting addresses"
+//     );
+//     require(
+//         rewardPercentage > 0 && rewardPercentage <= 100,
+//         "Reward percentage must be between 1 and 100"
+//     );
 
-// function tokenURI(
-//     uint256 tokenId
-// ) public view override(ERC721URIStorage) returns (string memory) {
-//     return super.tokenURI(tokenId);
+//     address[] memory topAddresses = getTopMintNFT(numberOfWinners);
+
+//     uint256 totalReward = (address(this).balance * rewardPercentage) / 100;
+
+//     for (uint256 i = 0; i < numberOfWinners; i++) {
+//         payable(topAddresses[i]).transfer(totalReward / numberOfWinners);
+//     }
 // }

@@ -51,13 +51,11 @@ describe("NFTMarketplace", function () {
     // });
 
     it("Should edit add Free mint address", async function () {
-      // const listAddress = [
-      //   "0xFd883589837bEEFf3dFdB97A821E0c71FF9BA20A",
-      //   "0xf30607e0cdEc7188d50d2bb384073bF1D5b02fA4",
-      //   "0xC77E5F3B7099bA3b3A4b20292d010696b97177fc",
-      //   "0x225b935D12D9bf02118C8e0A0bee9140b4522A24",
-      // ];
-      const listAddress = [owner.address];
+      const listAddress = [
+        owner.address.toString(),
+        "0xf30607e0cdEc7188d50d2bb384073bF1D5b02fA4",
+      ];
+
       for (var i = 0; i < listAddress.length; i++) {
         const result = await baseXNFT.addFreeMintAddress(listAddress[i], {
           // gasLimit: 272441000000000,
@@ -90,23 +88,23 @@ describe("NFTMarketplace", function () {
     //   }
     // });
 
-    it("Should crete NFT", function (done) {
-      (async () => {
-        const random = Math.floor(Math.random() * 30) + 1;
-        console.log("random: ", random);
-        for (var i = 0; i < random; i++) {
-          console.log("minter: ", owner.address);
-          const price = await baseXNFT.getPrice();
-          console.log("price: ", price.toString());
-          const result = await baseXNFT.mintNFT({
-            value: price,
-            // gasLimit: 272441,
-          });
-          console.log("result: ", result.hash);
-          await new Promise((resolve) => setTimeout(resolve, 15000));
-        }
-      })().then(done);
-    });
+    // it("Should crete NFT", function (done) {
+    //   (async () => {
+    //     const random = Math.floor(Math.random() * 30) + 1;
+    //     console.log("random: ", random);
+    //     for (var i = 0; i < random; i++) {
+    //       console.log("minter: ", owner.address);
+    //       const price = await baseXNFT.getPrice(); // 0.00054
+    //       console.log("price: ", price.toString());
+    //       const result = await baseXNFT.mintNFT({
+    //         value: price,
+    //         // gasLimit: 272441,
+    //       });
+    //       console.log("result: ", result.hash);
+    //       await new Promise((resolve) => setTimeout(resolve, 15000));
+    //     }
+    //   })().then(done);
+    // });
 
     // it("Should return top mint", async function () {
     //   const result = await baseXNFT.getTopMintNFT(2);

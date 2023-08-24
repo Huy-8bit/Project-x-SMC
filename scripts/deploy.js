@@ -22,12 +22,13 @@ async function main() {
     utils.formatEther(balanceBefore)
   );
 
+  // const gasLimits = utils.parseUnits("2", "ether");
+  // console.log("Gas limit:", gasLimits.toString());
+
   // deploy NFT
   const NFT = await ethers.getContractFactory("BaseXNFT");
   const nft = await NFT.deploy("0xf30607e0cdEc7188d50d2bb384073bF1D5b02fA4");
-  await nft.deployed({
-    gasLimit: 500000000,
-  });
+  await nft.deployed();
   console.log("NFT address: ", nft.address);
 
   // const balanceAfter = await deployer.getBalance();

@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/BaseXNFT.sol": {
-      "lastModificationDate": 1692453761440,
-      "contentHash": "889a60cafdaeed5f56eb56d5dd3ca8ed",
+      "lastModificationDate": 1692626763793,
+      "contentHash": "9b2c5180611bb0cd29d5c2efe0cbeddf",
       "sourceName": "contracts/BaseXNFT.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -120,8 +120,8 @@
       ]
     },
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
-      "lastModificationDate": 1691547271024,
-      "contentHash": "5a20b2cad87ddb61c7a3a6af21289e28",
+      "lastModificationDate": 1692626571382,
+      "contentHash": "5e85b9816680fa054a287540756cefdb",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -157,8 +157,8 @@
       ]
     },
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol": {
-      "lastModificationDate": 1691547270757,
-      "contentHash": "de368c6a87e159c86544ae5041b58cf3",
+      "lastModificationDate": 1692626095422,
+      "contentHash": "625f19d27f674323457b2adae594ecb9",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -659,6 +659,37 @@
       "versionPragmas": [
         "^0.8.0"
       ],
+      "artifacts": []
+    },
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/IBaseXNFT.sol": {
+      "lastModificationDate": 1692537088550,
+      "contentHash": "336bd748626d320b3ce8d37cb931f1df",
+      "sourceName": "contracts/IBaseXNFT.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [],
       "artifacts": []
     }
   }

@@ -2,17 +2,29 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/utils/Counters.sol";
+// import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+// import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract BaseXNFT is ERC721URIStorage, Ownable {
+import "./utils/BasicNFT.sol";
+import "./libraries/BaseXNFTLibrary.sol";
+
+// build contract baseXNFT with basicNFT is libraries
+contract BaseXNFT is BasicNFT {
+    using BaseXNFTLibrary for BaseXNFTLibrary.NFTUrls;
     using Counters for Counters.Counter;
-
+    BasicNFT basicNFTContract;
     Counters.Counter private _tokenIds;
-
     string public NFT_url;
+
+    BaseXNFTLibrary.NFTUrls private nftUrls =
+        BaseXNFTLibrary.NFTUrls({
+            urlCommon: "https://ipfs.io/ipfs/QmcaDRKb5cM5CN6GDMBYw4m3DtUuHVZ6fSeCqiV9YMqZww?filename=NFT0.json",
+            urlRare: "https://ipfs.io/ipfs/QmcJ1FADWWFWupH83KPVmc1qhNAmiKmHbM5g5TjvtRg9e5?filename=NFT1.json",
+            urlEpic: "https://ipfs.io/ipfs/QmTgqMd7MYNLNGQyhszEPgwcaiumY54k99tZNabFdqYiVf?filename=NFT2.json",
+            urlLegendary: "https://ipfs.io/ipfs/QmRQmLmoxC8aCoDUkSqUTKusG3t2p5MdtU1qjGAG9ssL5u?filename=NFT3.json"
+        });
 
     uint256 public limitMint;
 
@@ -23,6 +35,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
     uint256 public totalSupply;
 
     uint256 public limitTotalMinted;
+
     enum Rank {
         Common,
         Rare,
@@ -37,21 +50,6 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     event NFTMinted(uint256 indexed tokenId, uint256 rank, uint256 time_minted);
 
-    struct NFTUrls {
-        string urlCommon;
-        string urlRare;
-        string urlEpic;
-        string urlLegendary;
-    }
-
-    NFTUrls private nftUrls =
-        NFTUrls({
-            urlCommon: "https://ipfs.io/ipfs/QmcaDRKb5cM5CN6GDMBYw4m3DtUuHVZ6fSeCqiV9YMqZww?filename=NFT0.json",
-            urlRare: "https://ipfs.io/ipfs/QmcJ1FADWWFWupH83KPVmc1qhNAmiKmHbM5g5TjvtRg9e5?filename=NFT1.json",
-            urlEpic: "https://ipfs.io/ipfs/QmTgqMd7MYNLNGQyhszEPgwcaiumY54k99tZNabFdqYiVf?filename=NFT2.json",
-            urlLegendary: "https://ipfs.io/ipfs/QmRQmLmoxC8aCoDUkSqUTKusG3t2p5MdtU1qjGAG9ssL5u?filename=NFT3.json"
-        });
-
     bool private priceChanged = false;
 
     // mapping(address => uint256[]) private mintedNFTIds;
@@ -62,7 +60,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     // mapping(address => uint256) public lastMintTimestamp;
 
-    mapping(uint256 => NFT) public NFTs;
+    mapping(uint256 => BaseXNFTLibrary.NFT) public NFTs;
 
     uint256[] private Rarity;
     // event RarityChanged(uint256[] newRarity);
@@ -77,7 +75,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
 
     uint256 private limitMintWhilteList;
 
-    constructor(address _ownerWithDraw) ERC721("BaseX Spaceship", "BX") {
+    constructor(address _ownerWithDraw, address addressOfBasicNFTContract) {
         limitMint = 10;
         lastAddress = msg.sender;
         totalSupply = 0;
@@ -92,6 +90,7 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         mintChanged = false;
         limitTotalMinted = 20000;
         limitMintWhilteList = 20;
+        basicNFTContract = BasicNFT(addressOfBasicNFTContract);
     }
 
     function editLimitMint(uint256 _newLimit) public onlyOwner {
@@ -120,39 +119,13 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
     }
 
     function mintNFT(address _ownerNFT) internal {
-        uint256 randomNumber = uint256(
-            keccak256(
-                abi.encodePacked(
-                    block.number,
-                    block.timestamp,
-                    block.difficulty,
-                    msg.sender,
-                    lastAddress
-                )
-            )
+        BaseXNFTLibrary.NFT memory newNFT = BaseXNFTLibrary.calculateNFTInfo(
+            block.number,
+            block.timestamp,
+            block.difficulty,
+            msg.sender,
+            lastAddress
         );
-
-        uint256 calculates = randomNumber % 100;
-        Rank randomRank;
-
-        if (calculates < Rarity[0] && calculates >= 0) {
-            // it's 60% for common
-            randomRank = Rank.Common;
-        } else if (
-            calculates < Rarity[0] + Rarity[1] && calculates >= Rarity[0]
-        ) {
-            // it's 25% for rare
-            randomRank = Rank.Rare;
-        } else if (
-            calculates < Rarity[0] + Rarity[1] + Rarity[2] &&
-            calculates >= Rarity[0] + Rarity[1]
-        ) {
-            // it's 10% for epic
-            randomRank = Rank.Epic;
-        } else {
-            randomRank = Rank.Legendary;
-        }
-
         totalSupply += 1;
         if (priceChanged == false) {
             if (totalSupply + limitMintWhilteList >= 40) {
@@ -167,20 +140,19 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         lastAddress = _ownerNFT;
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
-        _mint(_ownerNFT, newTokenId);
-        string memory _NFT_url = "";
-        if (randomRank == Rank.Common) {
+        string memory _NFT_url;
+        uint256 randomRank;
+        if (newNFT.rank == BaseXNFTLibrary.Rank.Common) {
             _NFT_url = nftUrls.urlCommon;
-        } else if (randomRank == Rank.Rare) {
+        } else if (newNFT.rank == BaseXNFTLibrary.Rank.Rare) {
             _NFT_url = nftUrls.urlRare;
-        } else if (randomRank == Rank.Epic) {
+        } else if (newNFT.rank == BaseXNFTLibrary.Rank.Epic) {
             _NFT_url = nftUrls.urlEpic;
         } else {
             _NFT_url = nftUrls.urlLegendary;
         }
-        _setTokenURI(newTokenId, _NFT_url);
 
-        NFT memory newNFT = NFT(newTokenId, randomRank);
+        basicNFTContract.mintNFT(_ownerNFT, newTokenId, _NFT_url);
 
         NFTs[newTokenId] = newNFT;
 
@@ -259,17 +231,11 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         return price;
     }
 
-    function getNFTRank(uint256 tokenId) public view returns (Rank) {
+    function getNFTRank(
+        uint256 tokenId
+    ) public view returns (BaseXNFTLibrary.Rank) {
         require(_exists(tokenId), "Token ID does not exist");
         return NFTs[tokenId].rank;
-    }
-
-    function transferNFT(address _to, uint256 _tokenId) public {
-        require(
-            ownerOf(_tokenId) == msg.sender,
-            "You are not the owner of this NFT"
-        );
-        safeTransferFrom(msg.sender, _to, _tokenId);
     }
 
     function _burn(uint256 tokenId) internal override(ERC721URIStorage) {
@@ -301,16 +267,17 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         uint256[] memory myNFTs = getOwnedNFTs(_user); // huongiuhuy
         uint256 point = 0;
         for (uint256 i = 0; i < myNFTs.length; i++) {
-            if (NFTs[myNFTs[i]].rank == Rank.Common) {
+            if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Common) {
                 point += 1;
-            } else if (NFTs[myNFTs[i]].rank == Rank.Rare) {
+            } else if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Rare) {
                 point += 5;
-            } else if (NFTs[myNFTs[i]].rank == Rank.Epic) {
+            } else if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Epic) {
                 point += 15;
-            } else if (NFTs[myNFTs[i]].rank == Rank.Legendary) {
+            } else if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Legendary) {
                 point += 50;
             }
         }
+
         return point;
     }
 
@@ -436,29 +403,3 @@ contract BaseXNFT is ERC721URIStorage, Ownable {
         }
     }
 }
-
-// function withdrawRewards(
-//     uint256 numberOfWinners,
-//     uint256 rewardPercentage
-// ) public onlyOwner {
-//     require(
-//         numberOfWinners > 0,
-//         "Number of winners must be greater than zero"
-//     );
-//     require(
-//         numberOfWinners <= mintingAddresses.length,
-//         "Number of winners exceeds the number of minting addresses"
-//     );
-//     require(
-//         rewardPercentage > 0 && rewardPercentage <= 100,
-//         "Reward percentage must be between 1 and 100"
-//     );
-
-//     address[] memory topAddresses = getTopMintNFT(numberOfWinners);
-
-//     uint256 totalReward = (address(this).balance * rewardPercentage) / 100;
-
-//     for (uint256 i = 0; i < numberOfWinners; i++) {
-//         payable(topAddresses[i]).transfer(totalReward / numberOfWinners);
-//     }
-// }

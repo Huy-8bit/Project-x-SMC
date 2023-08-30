@@ -23,11 +23,13 @@ module.exports = {
   mocha: {
     timeout: 6000000, // Tăng thời gian tối đa cho mỗi kiểm thử thành 6000 giây
   },
+
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: "TRD75UM176G352ITIMFI6AA5K8RKAQ9WCB",
+    apiKey: "SZVKP8YHJF5DPMSNMD9ZY3ZN9KN97IWYXA",
   },
+
   solidity: {
     compilers: [
       {

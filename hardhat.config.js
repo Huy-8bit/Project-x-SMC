@@ -21,7 +21,13 @@ module.exports = {
     },
   },
   mocha: {
-    timeout: 6000000, // Tăng thời gian tối đa cho mỗi kiểm thử thành 6000 giây
+    timeout: 6000000,
+  },
+  libraries: {
+    BaseXNFTLibrary: {
+      path: "./contracts/BaseXNFTLibrary.sol",
+      address: "0x7Ad44152E59dbc21a2Fb9589d1bc3194699c4659",
+    },
   },
 
   etherscan: {

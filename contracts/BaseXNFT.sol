@@ -2,11 +2,6 @@
 
 pragma solidity ^0.8.0;
 
-// import "@openzeppelin/contracts/utils/Counters.sol";
-// import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-// import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-// import "@openzeppelin/contracts/access/Ownable.sol";
-
 import "./utils/BasicNFT.sol";
 import "./libraries/BaseXNFTLibrary.sol";
 
@@ -128,13 +123,10 @@ contract BaseXNFT is BasicNFT {
         );
         totalSupply += 1;
         if (priceChanged == false) {
-            if (totalSupply + limitMintWhilteList >= 40) {
-                price = 0.00002 ether;
-            } else if (totalSupply + limitMintWhilteList >= 10) {
-                price = 0.00001 ether;
-            } else {
-                price = 0.000000 ether;
-            }
+            price = BaseXNFTLibrary.calculatePrice(
+                totalSupply,
+                limitMintWhilteList
+            );
         }
 
         lastAddress = _ownerNFT;
@@ -238,10 +230,6 @@ contract BaseXNFT is BasicNFT {
         return NFTs[tokenId].rank;
     }
 
-    function _burn(uint256 tokenId) internal override(ERC721URIStorage) {
-        super._burn(tokenId);
-    }
-
     function supportsInterface(
         bytes4 interfaceId
     ) public view override(ERC721URIStorage) returns (bool) {
@@ -263,8 +251,12 @@ contract BaseXNFT is BasicNFT {
         return ownedNFTs;
     }
 
+    function getAllUsers() public view returns (address[] memory) {
+        return mintingAddresses;
+    }
+
     function getPoint(address _user) public view returns (uint256) {
-        uint256[] memory myNFTs = getOwnedNFTs(_user); // huongiuhuy
+        uint256[] memory myNFTs = getOwnedNFTs(_user);
         uint256 point = 0;
         for (uint256 i = 0; i < myNFTs.length; i++) {
             if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Common) {
@@ -281,56 +273,6 @@ contract BaseXNFT is BasicNFT {
         return point;
     }
 
-    function _sortTopMintingAddresses()
-        internal
-        view
-        returns (address[] memory)
-    {
-        uint256[] memory indices = new uint256[](mintingAddresses.length);
-
-        for (uint256 i = 0; i < mintingAddresses.length; i++) {
-            indices[i] = i;
-        }
-
-        for (uint256 i = 0; i < mintingAddresses.length - 1; i++) {
-            for (uint256 j = i + 1; j < mintingAddresses.length; j++) {
-                if (
-                    getPoint(mintingAddresses[indices[i]]) <
-                    getPoint(mintingAddresses[indices[j]])
-                ) {
-                    (indices[i], indices[j]) = (indices[j], indices[i]);
-                }
-            }
-        }
-
-        address[] memory sortedAddresses = new address[](
-            mintingAddresses.length
-        );
-
-        for (uint256 i = 0; i < mintingAddresses.length; i++) {
-            sortedAddresses[i] = mintingAddresses[indices[i]];
-        }
-
-        return sortedAddresses;
-    }
-
-    function getTopMintNFT(uint256 top) public view returns (address[] memory) {
-        require(top > 0, "Top must be greater than zero");
-        require(
-            top <= mintingAddresses.length,
-            "Top exceeds the number of minting addresses"
-        );
-
-        address[] memory topAddresses = new address[](top);
-
-        address[] memory sortedAddresses = _sortTopMintingAddresses();
-
-        for (uint256 i = 0; i < top; i++) {
-            topAddresses[i] = sortedAddresses[i];
-        }
-        return topAddresses;
-    }
-
     function changeWithdrawFlag(bool _flag) external {
         require(msg.sender == ownerWithDraw, "You are not the owner");
         withdrawFlag = _flag;
@@ -344,7 +286,8 @@ contract BaseXNFT is BasicNFT {
 
     function withdrawRewards(
         uint256 numberOfWinners,
-        uint256 rewardPercentage
+        uint256 rewardPercentage,
+        address[] memory topAddresses
     ) public onlyOwner {
         require(
             numberOfWinners > 0,
@@ -358,16 +301,11 @@ contract BaseXNFT is BasicNFT {
             rewardPercentage > 0 && rewardPercentage <= 100,
             "Reward percentage must be between 1 and 100"
         );
-
-        address[] memory topAddresses = getTopMintNFT(numberOfWinners);
-
         uint256 totalReward = (address(this).balance * rewardPercentage) / 100;
-
         uint256 top10Percentage = (totalReward * 30) / 100;
         uint256 top15Percentage = (totalReward * 25) / 100;
         uint256 top25Percentage = (totalReward * 20) / 100;
         uint256 remainingPercentage = (totalReward * 15) / 100;
-
         uint256 top10Count = (numberOfWinners * 10) / 100;
         uint256 top15Count = (numberOfWinners * 15) / 100;
         uint256 top25Count = (numberOfWinners * 25) / 100;
@@ -375,15 +313,12 @@ contract BaseXNFT is BasicNFT {
             top10Count -
             top15Count -
             top25Count;
-
         for (uint256 i = 0; i < top10Count; i++) {
             payable(topAddresses[i]).transfer(top10Percentage / top10Count);
         }
-
         for (uint256 i = top10Count; i < top10Count + top15Count; i++) {
             payable(topAddresses[i]).transfer(top15Percentage / top15Count);
         }
-
         for (
             uint256 i = top10Count + top15Count;
             i < top10Count + top15Count + top25Count;
@@ -391,7 +326,6 @@ contract BaseXNFT is BasicNFT {
         ) {
             payable(topAddresses[i]).transfer(top25Percentage / top25Count);
         }
-
         for (
             uint256 i = top10Count + top15Count + top25Count;
             i < numberOfWinners;

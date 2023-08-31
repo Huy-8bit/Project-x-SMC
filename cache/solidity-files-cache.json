@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/BaseXNFT.sol": {
-      "lastModificationDate": 1693369716235,
-      "contentHash": "fe7057d29d502dc62d0a026533d962bb",
+      "lastModificationDate": 1693483371387,
+      "contentHash": "f65caa9b2fa5e210e9b2ee7540c6b86e",
       "sourceName": "contracts/BaseXNFT.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -29,14 +29,14 @@
         }
       },
       "imports": [
-        "./utils/BasicNFT.sol"
+        "./utils/BasicNFT.sol",
+        "./libraries/BaseXNFTLibrary.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "BaseXNFT",
-        "BaseXNFTLibrary"
+        "BaseXNFT"
       ]
     },
     "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/utils/BasicNFT.sol": {
@@ -729,6 +729,41 @@
       "imports": [],
       "versionPragmas": [],
       "artifacts": []
+    },
+    "/Users/huy8bit/Desktop/DRIVE/JOB/Project X/dev/sourceCode/contracts/libraries/BaseXNFTLibrary.sol": {
+      "lastModificationDate": 1693481862516,
+      "contentHash": "86e06eb4f19ec8041385efd57644fbb0",
+      "sourceName": "contracts/libraries/BaseXNFTLibrary.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "BaseXNFTLibrary"
+      ]
     }
   }
 }

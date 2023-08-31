@@ -60,4 +60,20 @@ library BaseXNFTLibrary {
 
         return newNFT;
     }
+
+    function calculatePrice(
+        uint256 _totalSupply,
+        uint256 _limitMintWhilteList
+    ) external view returns (uint256) {
+        uint256 price = 0;
+        if (_totalSupply + _limitMintWhilteList >= 40) {
+            price = 0.00002 ether;
+        } else if (_totalSupply + _limitMintWhilteList >= 10) {
+            price = 0.00001 ether;
+        } else {
+            price = 0.000000 ether;
+        }
+
+        return price;
+    }
 }

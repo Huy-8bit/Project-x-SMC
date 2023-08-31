@@ -22,42 +22,45 @@ async function main() {
     utils.formatEther(balanceBefore)
   );
 
-  // deploy BaseXLibrary
-  const BaseXNFTLibrary = await ethers.getContractFactory("BaseXNFTLibrary");
-  const baseXNFTLibrary = await BaseXNFTLibrary.deploy();
-  await baseXNFTLibrary.deployed();
-  nftData = {
-    BaseXNFTLibraryAddress: baseXNFTLibrary.address,
-  };
-  nftJsonData = JSON.stringify(nftData, null, 2);
-  fs.writeFileSync(baseXNFTLibraryFilePath, nftJsonData);
-  console.log("baseXNFTLibrary address: ", baseXNFTLibrary.address);
+  // // deploy BaseXLibrary
+  // const BaseXNFTLibrary = await ethers.getContractFactory("BaseXNFTLibrary");
+  // const baseXNFTLibrary = await BaseXNFTLibrary.deploy();
+  // await baseXNFTLibrary.deployed();
+  // nftData = {
+  //   BaseXNFTLibraryAddress: baseXNFTLibrary.address,
+  // };
+  // nftJsonData = JSON.stringify(nftData, null, 2);
+  // fs.writeFileSync(baseXNFTLibraryFilePath, nftJsonData);
+  // console.log("baseXNFTLibrary address: ", baseXNFTLibrary.address);
 
-  // deploy NFT
-  const basicNFT = await ethers.getContractFactory("BasicNFT");
-  const nft = await basicNFT.deploy();
-  await nft.deployed();
-  nftData = {
-    BasicNFTAddress: nft.address,
-  };
-  nftJsonData = JSON.stringify(nftData, null, 2);
-  fs.writeFileSync(basicNFTFilePath, nftJsonData);
-  console.log("basicNFT address: ", nft.address);
+  // // deploy NFT
+  // const basicNFT = await ethers.getContractFactory("BasicNFT");
+  // const nft = await basicNFT.deploy();
+  // await nft.deployed();
+  // nftData = {
+  //   BasicNFTAddress: nft.address,
+  // };
+  // nftJsonData = JSON.stringify(nftData, null, 2);
+  // fs.writeFileSync(basicNFTFilePath, nftJsonData);
+  // console.log("basicNFT address: ", nft.address);
 
-  // delay 30s
-  await new Promise((resolve) => setTimeout(resolve, 30000));
+  // // delay 30s
+  // await new Promise((resolve) => setTimeout(resolve, 30000));
 
   // deploy NFT
   const NFT = await ethers.getContractFactory("BaseXNFT", {
     libraries: {
-      BaseXNFTLibrary: baseXNFTLibrary.address.toString(),
+      BaseXNFTLibrary: "0x284957863cb2C54EEDc8251C42a6b8E2303f0BDc",
     },
   });
   const nftMain = await NFT.deploy(
     "0xf30607e0cdEc7188d50d2bb384073bF1D5b02fA4",
-    nft.address
+    "0xFc49A16b26607cC32c96BCc1Ab99635ff39bEf81",
+    {
+      gasLimit: 10000000,
+    }
   );
-  await nft.deployed();
+  await nftMain.deployed();
   console.log("baseXNFT address: ", nftMain.address);
 
   nftData = {

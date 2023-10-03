@@ -31,6 +31,8 @@ contract BaseXNFT is BasicNFT {
 
     uint256 public limitTotalMinted;
 
+    uint256[] public totalMintWithRank;
+
     enum Rank {
         Common,
         Rare,
@@ -85,6 +87,7 @@ contract BaseXNFT is BasicNFT {
         mintChanged = false;
         limitTotalMinted = 20000;
         limitMintWhilteList = 20;
+        totalMintWithRank = [0, 0, 0, 0];
         basicNFTContract = BasicNFT(addressOfBasicNFTContract);
     }
 
@@ -119,8 +122,21 @@ contract BaseXNFT is BasicNFT {
             block.timestamp,
             block.difficulty,
             msg.sender,
-            lastAddress
+            lastAddress,
+            totalMintWithRank,
+            totalSupply
         );
+
+        if (newNFT.rank == BaseXNFTLibrary.Rank.Common) {
+            totalMintWithRank[0] += 1;
+        } else if (newNFT.rank == BaseXNFTLibrary.Rank.Rare) {
+            totalMintWithRank[1] += 1;
+        } else if (newNFT.rank == BaseXNFTLibrary.Rank.Epic) {
+            totalMintWithRank[2] += 1;
+        } else {
+            totalMintWithRank[3] += 1;
+        }
+
         totalSupply += 1;
         if (priceChanged == false) {
             price = BaseXNFTLibrary.calculatePrice(
@@ -167,7 +183,7 @@ contract BaseXNFT is BasicNFT {
         emit NFTMinted(newTokenId, uint256(randomRank), block.timestamp);
     }
 
-    function mintNFT() public payable {
+    function mint() public payable {
         require(
             totalSupply < limitTotalMinted,
             "This collection has reached the limit of minting"
@@ -255,24 +271,6 @@ contract BaseXNFT is BasicNFT {
         return mintingAddresses;
     }
 
-    function getPoint(address _user) public view returns (uint256) {
-        uint256[] memory myNFTs = getOwnedNFTs(_user);
-        uint256 point = 0;
-        for (uint256 i = 0; i < myNFTs.length; i++) {
-            if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Common) {
-                point += 1;
-            } else if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Rare) {
-                point += 5;
-            } else if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Epic) {
-                point += 15;
-            } else if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Legendary) {
-                point += 50;
-            }
-        }
-
-        return point;
-    }
-
     function changeWithdrawFlag(bool _flag) external {
         require(msg.sender == ownerWithDraw, "You are not the owner");
         withdrawFlag = _flag;
@@ -337,3 +335,21 @@ contract BaseXNFT is BasicNFT {
         }
     }
 }
+
+// function getPoint(address _user) public view returns (uint256) {
+//         uint256[] memory myNFTs = getOwnedNFTs(_user);
+//         uint256 point = 0;
+//         for (uint256 i = 0; i < myNFTs.length; i++) {
+//             if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Common) {
+//                 point += 1;
+//             } else if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Rare) {
+//                 point += 5;
+//             } else if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Epic) {
+//                 point += 15;
+//             } else if (NFTs[myNFTs[i]].rank == BaseXNFTLibrary.Rank.Legendary) {
+//                 point += 50;
+//             }
+//         }
+
+//         return point;
+//     }
